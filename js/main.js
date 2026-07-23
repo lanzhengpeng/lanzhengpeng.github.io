@@ -411,3 +411,15 @@ document.addEventListener('mousemove', (e) => {
 });
 
 applyLanguage('en');
+
+// Background music: low volume, autoplay with fallback on first interaction
+const bgm = document.getElementById('bgm');
+if (bgm) {
+    bgm.volume = 0.08;
+    const startBgm = () => {
+        if (bgm.paused) bgm.play().catch(() => {});
+    };
+    bgm.play().catch(() => {});
+    document.addEventListener('click', startBgm, { once: true });
+    document.addEventListener('mousemove', startBgm, { once: true });
+}
