@@ -1,0 +1,16 @@
+.tagline {
+    font-size: 1rem;
+    color: var(--text-muted);
+    min-height: 1.8rem;
+    font-weight: 300;
+}
+
+.cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.1em;
+    background: var(--accent);
+    margin-left: 2px;
+    animation: blink 1s infinite;
+    vertical-align: middle;
+}

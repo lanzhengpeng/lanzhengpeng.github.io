@@ -7,11 +7,25 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/base/variables.css">
+    <link rel="stylesheet" href="css/base/reset.css">
+    <link rel="stylesheet" href="css/base/animations.css">
+    <link rel="stylesheet" href="css/layout/container.css">
+    <link rel="stylesheet" href="css/components/lang-switch.css">
+    <link rel="stylesheet" href="css/components/typewriter.css">
+    <link rel="stylesheet" href="css/components/links.css">
+    <link rel="stylesheet" href="css/components/game-score.css">
+    <link rel="stylesheet" href="css/components/last-updated.css">
+    <link rel="stylesheet" href="css/components/footer.css">
+    <link rel="stylesheet" href="css/sections/hero.css">
+    <link rel="stylesheet" href="css/sections/about.css">
+    <link rel="stylesheet" href="css/sections/skills.css">
+    <link rel="stylesheet" href="css/sections/publication.css">
+    <link rel="stylesheet" href="css/base/responsive.css">
 </head>
 <body>
     <canvas id="canvas-bg"></canvas>
-    <audio id="bgm" src="files/Allard%20Sidonia%20-%20Rain%20Without%20End.mp3" loop preload="auto"></audio>
+    <audio id="bgm" src="files/Allard%20Sidonia%20-%20Rain%20Without%20End.mp3" loop preload="none"></audio>
 
     <div class="lang-switch">
         <button data-lang="en" class="active">EN</button>
@@ -23,10 +37,35 @@
 
     <div class="container">
         <section class="hero visible">
-            <div class="avatar-container" id="avatar-container">
-                <div class="vinyl"></div>
-                <div class="tonearm-wrap"><div class="tonearm"></div></div>
-                <img src="images/avatar.jpg" alt="Zhengpeng Lan" class="avatar" id="avatar">
+            <div class="avatar-frame" id="avatar-frame">
+                <div class="avatar-container" id="avatar-container">
+                    <div class="vinyl"></div>
+                    <div class="tonearm-wrap">
+                        <svg viewBox="0 0 120 200" width="120" height="200">
+                            <defs>
+                                <linearGradient id="armGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                    <stop offset="0%" style="stop-color:#a1a1aa" />
+                                    <stop offset="100%" style="stop-color:#f8fafc" />
+                                </linearGradient>
+                            </defs>
+                            <!-- Pivot -->
+                            <circle cx="60" cy="30" r="10" fill="rgba(255, 255, 255, 0.1)" />
+                            <circle cx="60" cy="30" r="5" fill="#f8fafc" />
+                            <circle cx="60" cy="30" r="2" fill="#09090b" />
+                            <!-- Bent tone arm -->
+                            <path class="tonearm-path" d="M60 30 L68 105 L30 160" stroke="url(#armGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+                            <!-- Headshell and stylus -->
+                            <g transform="translate(30, 160) rotate(35)">
+                                <rect x="-7" y="0" width="14" height="22" rx="2.5" fill="#f8fafc" />
+                                <line x1="-2.5" y1="5" x2="-2.5" y2="17" stroke="#09090b" stroke-width="1.5" stroke-linecap="round" />
+                                <line x1="2.5" y1="5" x2="2.5" y2="17" stroke="#09090b" stroke-width="1.5" stroke-linecap="round" />
+                                <path class="needle" d="M-3 22 L -1.5 26 L 1.5 26 L 3 22" fill="#a1a1aa" />
+                            </g>
+                        </svg>
+                    </div>
+                    <img src="images/avatar.jpg" alt="Zhengpeng Lan" class="avatar" id="avatar">
+                </div>
+                <div class="progress-ring" id="progress-ring" aria-hidden="true"></div>
             </div>
             <h1 data-i18n="name">Zhengpeng Lan</h1>
             <div class="intro-line" data-i18n="heroIntro"></div>
@@ -85,6 +124,22 @@
         </footer>
     </div>
 
-    <script src="js/main.js"></script>
+    <script>
+        if (location.protocol === 'file:') {
+            document.write([
+                '<script src="js/legacy/helpers.js"><\/script>',
+                '<script src="js/legacy/i18n.js"><\/script>',
+                '<script src="js/legacy/typewriter.js"><\/script>',
+                '<script src="js/legacy/language.js"><\/script>',
+                '<script src="js/legacy/reveal.js"><\/script>',
+                '<script src="js/legacy/game.js"><\/script>',
+                '<script src="js/legacy/background.js"><\/script>',
+                '<script src="js/legacy/avatar.js"><\/script>',
+                '<script src="js/legacy/main.js"><\/script>'
+            ].join(''));
+        } else {
+            document.write('<script type="module" src="js/main.js"><\/script>');
+        }
+    </script>
 </body>
 </html>
