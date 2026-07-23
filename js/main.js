@@ -158,12 +158,79 @@ const canvas = document.getElementById('canvas-bg');
 const ctx = canvas.getContext('2d');
 let particles = [];
 
+// Game state
+let score = 0;
+let player = { x: 0, width: 100, height: 6 };
+let items = [];
+const scoreEl = document.getElementById('game-score');
+
 function resize() {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 }
 window.addEventListener('resize', resize);
 resize();
+
+// Game input: paddle follows mouse/touch anywhere on page
+window.addEventListener('mousemove', (e) => {
+    player.x = e.clientX - player.width / 2;
+});
+window.addEventListener('touchmove', (e) => {
+    player.x = e.touches[0].clientX - player.width / 2;
+}, { passive: true });
+
+function spawnItem() {
+    items.push({
+        x: Math.random() * (canvas.width - 20) + 10,
+        y: -10,
+        speed: Math.random() * 2 + 1.5,
+        radius: Math.random() * 3 + 3,
+        color: Math.random() > 0.5 ? '#818cf8' : '#c084fc'
+    });
+    setTimeout(spawnItem, Math.random() * 1000 + 400);
+}
+setTimeout(spawnItem, 1000);
+
+function drawGame() {
+    if (player.x < 0) player.x = 0;
+    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+    ctx.fillStyle = '#f8fafc';
+    ctx.shadowColor = '#818cf8';
+    ctx.shadowBlur = 15;
+    ctx.beginPath();
+    if (ctx.roundRect) {
+        ctx.roundRect(player.x, canvas.height - 30, player.width, player.height, 3);
+    } else {
+        ctx.rect(player.x, canvas.height - 30, player.width, player.height);
+    }
+    ctx.fill();
+    ctx.shadowBlur = 0;
+
+    for (let i = items.length - 1; i >= 0; i--) {
+        let item = items[i];
+        item.y += item.speed;
+
+        ctx.beginPath();
+        ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
+        ctx.fillStyle = item.color;
+        ctx.shadowColor = item.color;
+        ctx.shadowBlur = 10;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+
+        if (item.y + item.radius >= canvas.height - 30 &&
+            item.y - item.radius <= canvas.height - 30 + player.height &&
+            item.x >= player.x &&
+            item.x <= player.x + player.width) {
+            score += 10;
+            if (scoreEl) scoreEl.textContent = score;
+            items.splice(i, 1);
+        } else if (item.y > canvas.height) {
+            items.splice(i, 1);
+        }
+    }
+}
 
 class Particle {
     constructor() {
@@ -212,6 +279,7 @@ function animateParticles() {
             }
         }
     }
+    drawGame();
     requestAnimationFrame(animateParticles);
 }
 animateParticles();
@@ -226,95 +294,3 @@ document.addEventListener('mousemove', (e) => {
 });
 
 applyLanguage('en');
-
-// ================= 小游戏逻辑 =================
-const gameCanvas = document.getElementById('game-canvas');
-const gCtx = gameCanvas.getContext('2d');
-const scoreEl = document.getElementById('game-score');
-
-function resizeGame() {
-    if (gameCanvas && gameCanvas.parentElement) {
-        gameCanvas.width = gameCanvas.parentElement.clientWidth - 48;
-        gameCanvas.height = 300;
-    }
-}
-window.addEventListener('resize', resizeGame);
-setTimeout(resizeGame, 100);
-
-let score = 0;
-let player = { x: 0, width: 80, height: 6 };
-let items = [];
-let spawnTimeout;
-
-if (gameCanvas) {
-    gameCanvas.addEventListener('mousemove', (e) => {
-        const rect = gameCanvas.getBoundingClientRect();
-        player.x = e.clientX - rect.left - player.width / 2;
-    });
-
-    gameCanvas.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        const rect = gameCanvas.getBoundingClientRect();
-        player.x = e.touches[0].clientX - rect.left - player.width / 2;
-    }, { passive: false });
-}
-
-function spawnItem() {
-    if (!gameCanvas) return;
-    items.push({
-        x: Math.random() * (gameCanvas.width - 20) + 10,
-        y: -10,
-        speed: Math.random() * 2 + 1.5,
-        radius: Math.random() * 3 + 3,
-        color: Math.random() > 0.5 ? '#818cf8' : '#c084fc'
-    });
-    spawnTimeout = setTimeout(spawnItem, Math.random() * 1000 + 400);
-}
-setTimeout(spawnItem, 1000);
-
-function updateGame() {
-    if (!gameCanvas) return;
-    gCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
-
-    if (player.x < 0) player.x = 0;
-    if (player.x + player.width > gameCanvas.width) player.x = gameCanvas.width - player.width;
-
-    gCtx.fillStyle = '#f8fafc';
-    gCtx.shadowColor = '#818cf8';
-    gCtx.shadowBlur = 15;
-    gCtx.beginPath();
-    if (gCtx.roundRect) {
-        gCtx.roundRect(player.x, gameCanvas.height - 20, player.width, player.height, 3);
-    } else {
-        gCtx.rect(player.x, gameCanvas.height - 20, player.width, player.height);
-    }
-    gCtx.fill();
-    gCtx.shadowBlur = 0;
-
-    for (let i = items.length - 1; i >= 0; i--) {
-        let item = items[i];
-        item.y += item.speed;
-
-        gCtx.beginPath();
-        gCtx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
-        gCtx.fillStyle = item.color;
-        gCtx.shadowColor = item.color;
-        gCtx.shadowBlur = 10;
-        gCtx.fill();
-        gCtx.shadowBlur = 0;
-
-        if (item.y + item.radius >= gameCanvas.height - 20 &&
-            item.y - item.radius <= gameCanvas.height - 20 + player.height &&
-            item.x >= player.x &&
-            item.x <= player.x + player.width) {
-            score += 10;
-            if (scoreEl) scoreEl.textContent = score;
-            items.splice(i, 1);
-        } else if (item.y > gameCanvas.height) {
-            items.splice(i, 1);
-        }
-    }
-    requestAnimationFrame(updateGame);
-}
-updateGame();
-// ================= 小游戏逻辑结束 =================
