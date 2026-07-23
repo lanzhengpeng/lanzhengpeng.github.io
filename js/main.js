@@ -1,5 +1,6 @@
 const i18n = {
     en: {
+        name: "Zhengpeng Lan",
         heroIntro: "M.S. in Software Engineering, Zhejiang Normal University · Agent Framework Researcher",
         navPub: "Publication",
         aboutTitle: "About Me",
@@ -7,8 +8,18 @@ const i18n = {
         pubTitle: "Selected Publication",
         downloadBtn: "Download PDF",
         viewSpringer: "View on Springer",
-        footer: "Built with HTML, CSS & JavaScript.",
         lastUpdated: "Last updated: ",
+        skillsTitle: "Skills",
+        skills: [
+            "Java",
+            "Spring Boot",
+            "Agent Development",
+            "LangGraph",
+            "Python",
+            "PyTorch",
+            "LLM",
+            "ReAct"
+        ],
         phrases: [
             "LLM Agent Researcher",
             "Tool Learning Enthusiast",
@@ -17,6 +28,7 @@ const i18n = {
         abstractText: `Large Language Models (LLMs) exhibit promising capabilities as autonomous agents within the ReAct framework, yet they remain vulnerable to cascading errors in multi-step tool invocation scenarios. While introducing a lightweight verifier offers a natural mitigation strategy, we observe that end-to-end textual judgments from such verifiers are often unstable and unreliable. In this paper, we propose LatentReAct, a latent-space verification framework that enhances ReAct agents through decompositional representation validation. Instead of relying on generated text, LatentReAct extracts intermediate-layer latent representations from a frozen 3B-parameter model and decomposes action evaluation into multiple semantic dimensions. A lightweight policy head then scores candidate actions based on these latent features. Experiments on ToolBench and BFCL v4 demonstrate that LatentReAct significantly outperforms strong baselines, achieving 74.47% verification accuracy on ToolBench, improving end-to-end execution accuracy by up to 5 percentage points, and reducing unnecessary reasoning steps by 12–16%.`
     },
     zh: {
+        name: "兰政鹏",
         heroIntro: "浙江师范大学 · 软件工程硕士 · 智能体框架研究者",
         navPub: "论文",
         aboutTitle: "关于我",
@@ -24,8 +36,18 @@ const i18n = {
         pubTitle: "代表性论文",
         downloadBtn: "下载 PDF",
         viewSpringer: "Springer 查看",
-        footer: "使用 HTML、CSS 与 JavaScript 构建。",
         lastUpdated: "最近更新：",
+        skillsTitle: "技能",
+        skills: [
+            "Java",
+            "Spring Boot",
+            "智能体开发",
+            "LangGraph",
+            "Python",
+            "PyTorch",
+            "大语言模型",
+            "ReAct"
+        ],
         phrases: [
             "大模型智能体研究者",
             "工具学习爱好者",
@@ -38,6 +60,7 @@ const i18n = {
 let currentLang = 'en';
 const typewriter = document.getElementById('typewriter');
 const lastUpdatedEl = document.getElementById('last-updated');
+const skillsGrid = document.getElementById('skills-grid');
 let phraseIndex = 0;
 let charIndex = 0;
 let isDeleting = false;
@@ -50,6 +73,17 @@ function formatDate(date, lang) {
     return lang === 'zh' ? `${year}年${month}月${day}日` : `${year}-${month}-${day}`;
 }
 
+function renderSkills(lang) {
+    if (!skillsGrid) return;
+    skillsGrid.innerHTML = '';
+    i18n[lang].skills.forEach(skill => {
+        const tag = document.createElement('span');
+        tag.className = 'skill-tag';
+        tag.textContent = skill;
+        skillsGrid.appendChild(tag);
+    });
+}
+
 function applyLanguage(lang) {
     currentLang = lang;
     document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
@@ -60,6 +94,8 @@ function applyLanguage(lang) {
             el.textContent = i18n[lang][key];
         }
     });
+
+    renderSkills(lang);
 
     if (lastUpdatedEl) {
         lastUpdatedEl.textContent = i18n[lang].lastUpdated + formatDate(new Date(), lang);
