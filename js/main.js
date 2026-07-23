@@ -10,6 +10,8 @@ const i18n = {
         viewSpringer: "View on Springer",
         lastUpdated: "Last updated: ",
         skillsTitle: "Skills",
+        gameTitle: "Mini Game",
+        gameTip: "Move your mouse to catch the falling energy fragments.",
         skills: [
             "Java",
             "Spring Boot",
@@ -38,6 +40,8 @@ const i18n = {
         viewSpringer: "Springer 查看",
         lastUpdated: "最近更新：",
         skillsTitle: "技能",
+        gameTitle: "互动小游戏",
+        gameTip: "移动鼠标控制底板，接住掉落的能量碎片。",
         skills: [
             "Java",
             "Spring Boot",
@@ -222,3 +226,95 @@ document.addEventListener('mousemove', (e) => {
 });
 
 applyLanguage('en');
+
+// ================= 小游戏逻辑 =================
+const gameCanvas = document.getElementById('game-canvas');
+const gCtx = gameCanvas.getContext('2d');
+const scoreEl = document.getElementById('game-score');
+
+function resizeGame() {
+    if (gameCanvas && gameCanvas.parentElement) {
+        gameCanvas.width = gameCanvas.parentElement.clientWidth - 48;
+        gameCanvas.height = 300;
+    }
+}
+window.addEventListener('resize', resizeGame);
+setTimeout(resizeGame, 100);
+
+let score = 0;
+let player = { x: 0, width: 80, height: 6 };
+let items = [];
+let spawnTimeout;
+
+if (gameCanvas) {
+    gameCanvas.addEventListener('mousemove', (e) => {
+        const rect = gameCanvas.getBoundingClientRect();
+        player.x = e.clientX - rect.left - player.width / 2;
+    });
+
+    gameCanvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        const rect = gameCanvas.getBoundingClientRect();
+        player.x = e.touches[0].clientX - rect.left - player.width / 2;
+    }, { passive: false });
+}
+
+function spawnItem() {
+    if (!gameCanvas) return;
+    items.push({
+        x: Math.random() * (gameCanvas.width - 20) + 10,
+        y: -10,
+        speed: Math.random() * 2 + 1.5,
+        radius: Math.random() * 3 + 3,
+        color: Math.random() > 0.5 ? '#818cf8' : '#c084fc'
+    });
+    spawnTimeout = setTimeout(spawnItem, Math.random() * 1000 + 400);
+}
+setTimeout(spawnItem, 1000);
+
+function updateGame() {
+    if (!gameCanvas) return;
+    gCtx.clearRect(0, 0, gameCanvas.width, gameCanvas.height);
+
+    if (player.x < 0) player.x = 0;
+    if (player.x + player.width > gameCanvas.width) player.x = gameCanvas.width - player.width;
+
+    gCtx.fillStyle = '#f8fafc';
+    gCtx.shadowColor = '#818cf8';
+    gCtx.shadowBlur = 15;
+    gCtx.beginPath();
+    if (gCtx.roundRect) {
+        gCtx.roundRect(player.x, gameCanvas.height - 20, player.width, player.height, 3);
+    } else {
+        gCtx.rect(player.x, gameCanvas.height - 20, player.width, player.height);
+    }
+    gCtx.fill();
+    gCtx.shadowBlur = 0;
+
+    for (let i = items.length - 1; i >= 0; i--) {
+        let item = items[i];
+        item.y += item.speed;
+
+        gCtx.beginPath();
+        gCtx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
+        gCtx.fillStyle = item.color;
+        gCtx.shadowColor = item.color;
+        gCtx.shadowBlur = 10;
+        gCtx.fill();
+        gCtx.shadowBlur = 0;
+
+        if (item.y + item.radius >= gameCanvas.height - 20 &&
+            item.y - item.radius <= gameCanvas.height - 20 + player.height &&
+            item.x >= player.x &&
+            item.x <= player.x + player.width) {
+            score += 10;
+            if (scoreEl) scoreEl.textContent = score;
+            items.splice(i, 1);
+        } else if (item.y > gameCanvas.height) {
+            items.splice(i, 1);
+        }
+    }
+    requestAnimationFrame(updateGame);
+}
+updateGame();
+// ================= 小游戏逻辑结束 =================

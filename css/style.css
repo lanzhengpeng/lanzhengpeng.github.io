@@ -334,6 +334,42 @@ footer {
     color: #71717a;
 }
 
+/* Game section */
+.game-card {
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.game-header {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1rem;
+    font-weight: 800;
+    font-size: 1.2rem;
+    color: var(--accent);
+    font-family: monospace;
+}
+
+#game-canvas {
+    width: 100%;
+    height: 300px;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 0.75rem;
+    border: 1px solid var(--card-border);
+    cursor: crosshair;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.game-tip {
+    margin-top: 1rem;
+    font-size: 0.85rem !important;
+    text-align: center !important;
+    color: var(--text-muted);
+}
+
 @media (max-width: 640px) {
     h1 { font-size: 2.5rem; }
     .container { padding-top: 5rem; }
