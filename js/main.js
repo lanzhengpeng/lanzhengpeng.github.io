@@ -10,8 +10,6 @@ const i18n = {
         viewSpringer: "View on Springer",
         lastUpdated: "Last updated: ",
         skillsTitle: "Skills",
-        gameTitle: "Mini Game",
-        gameTip: "Move your mouse to guide the orb and collect falling fragments.",
         skills: [
             "Java",
             "Spring Boot",
@@ -40,8 +38,6 @@ const i18n = {
         viewSpringer: "Springer 查看",
         lastUpdated: "最近更新：",
         skillsTitle: "技能",
-        gameTitle: "互动小游戏",
-        gameTip: "移动鼠标控制光球，收集掉落的紫色碎片。",
         skills: [
             "Java",
             "Spring Boot",
@@ -412,14 +408,25 @@ document.addEventListener('mousemove', (e) => {
 
 applyLanguage('en');
 
-// Background music: low volume, autoplay with fallback on first interaction
+// Music toggle: muted by default, click to play/pause
 const bgm = document.getElementById('bgm');
-if (bgm) {
+const musicToggle = document.getElementById('music-toggle');
+const iconMute = document.getElementById('icon-mute');
+const iconPlay = document.getElementById('icon-play');
+if (bgm && musicToggle && iconMute && iconPlay) {
     bgm.volume = 0.08;
-    const startBgm = () => {
-        if (bgm.paused) bgm.play().catch(() => {});
-    };
-    bgm.play().catch(() => {});
-    document.addEventListener('click', startBgm, { once: true });
-    document.addEventListener('mousemove', startBgm, { once: true });
+    bgm.muted = true;
+    musicToggle.addEventListener('click', () => {
+        if (bgm.muted) {
+            bgm.muted = false;
+            bgm.play().catch(() => {});
+            iconMute.classList.add('hidden');
+            iconPlay.classList.remove('hidden');
+        } else {
+            bgm.muted = true;
+            bgm.pause();
+            iconMute.classList.remove('hidden');
+            iconPlay.classList.add('hidden');
+        }
+    });
 }
