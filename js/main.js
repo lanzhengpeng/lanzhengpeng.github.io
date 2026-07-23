@@ -156,9 +156,10 @@ let particles = [];
 
 // Game state
 let score = 0;
-let player = { x: 0, y: 0, targetX: 0, targetY: 0, radius: 12, tint: 0 };
+let player = { x: 0, y: 0, targetX: 0, targetY: 0, radius: 12, tint: 0, tintColor: '#c084fc' };
 let items = [];
 let bursts = [];
+const itemColors = ['#c084fc', '#818cf8', '#38bdf8', '#2dd4bf', '#fbbf24', '#fb7185'];
 const scoreEl = document.getElementById('game-score');
 
 function hexToRgb(hex) {
@@ -173,6 +174,11 @@ function mixColor(hex1, hex2, t) {
     const g = Math.round(c1.g + (c2.g - c1.g) * t);
     const b = Math.round(c1.b + (c2.b - c1.b) * t);
     return `rgb(${r}, ${g}, ${b})`;
+}
+
+function hexToRgba(hex, alpha) {
+    const c = hexToRgb(hex);
+    return `rgba(${c.r}, ${c.g}, ${c.b}, ${alpha})`;
 }
 
 function resize() {
@@ -204,7 +210,7 @@ function spawnItem() {
         vx: (Math.random() - 0.5) * 1.2,
         speed: Math.random() * 2 + 1.8,
         radius: Math.random() * 3 + 3,
-        color: '#c084fc'
+        color: itemColors[Math.floor(Math.random() * itemColors.length)]
     });
     setTimeout(spawnItem, Math.random() * 1000 + 400);
 }
@@ -219,11 +225,11 @@ function drawGame() {
     player.tint *= 0.92;
 
     // Draw player orb
-    const playerColor = player.tint > 0.01 ? mixColor('#f8fafc', '#c084fc', player.tint) : '#f8fafc';
+    const playerColor = player.tint > 0.01 ? mixColor('#f8fafc', player.tintColor, player.tint) : '#f8fafc';
     ctx.beginPath();
     ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
     ctx.fillStyle = playerColor;
-    ctx.shadowColor = player.tint > 0.5 ? '#c084fc' : '#818cf8';
+    ctx.shadowColor = player.tint > 0.5 ? player.tintColor : '#818cf8';
     ctx.shadowBlur = 20;
     ctx.fill();
     ctx.shadowBlur = 0;
@@ -249,8 +255,8 @@ function drawGame() {
             const y2 = item.y - Math.sin(angle) * tailLength * t2;
             const width = item.radius * 2 * (1 - t1) + 0.4 * t1;
             const segGrad = ctx.createLinearGradient(x1, y1, x2, y2);
-            segGrad.addColorStop(0, `rgba(192, 132, 252, ${0.9 * (1 - t1)})`);
-            segGrad.addColorStop(1, `rgba(192, 132, 252, ${0.9 * (1 - t2)})`);
+            segGrad.addColorStop(0, hexToRgba(item.color, 0.9 * (1 - t1)));
+            segGrad.addColorStop(1, hexToRgba(item.color, 0.9 * (1 - t2)));
             ctx.strokeStyle = segGrad;
             ctx.lineWidth = width;
             ctx.lineCap = 'round';
@@ -289,6 +295,7 @@ function drawGame() {
                 });
             }
             player.tint = 1;
+            player.tintColor = item.color;
             items.splice(i, 1);
         } else if (item.y > canvas.height || item.x < -50 || item.x > canvas.width + 50) {
             items.splice(i, 1);
@@ -413,20 +420,21 @@ document.addEventListener('mousemove', (e) => {
 
 applyLanguage('en');
 
-// Avatar as music player: click to play/pause, spin like a record while playing
+// Avatar as music player: click to play/pause, vinyl spins and tonearm moves
 const bgm = document.getElementById('bgm');
-if (bgm && avatar) {
+const avatarContainer = document.getElementById('avatar-container');
+if (bgm && avatar && avatarContainer) {
     bgm.volume = 0.08;
     bgm.muted = true;
     avatar.addEventListener('click', () => {
         if (bgm.muted || bgm.paused) {
             bgm.muted = false;
             bgm.play().catch(() => {});
-            avatar.classList.add('playing');
+            avatarContainer.classList.add('playing');
         } else {
             bgm.muted = true;
             bgm.pause();
-            avatar.classList.remove('playing');
+            avatarContainer.classList.remove('playing');
         }
     });
 }

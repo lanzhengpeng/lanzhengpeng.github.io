@@ -98,7 +98,12 @@ section.visible {
 
 .avatar-container {
     position: relative;
+    width: 190px;
+    height: 190px;
     margin-bottom: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .avatar-container::after {
@@ -118,19 +123,74 @@ section.visible {
     filter: blur(16px);
 }
 
+.vinyl {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    background:
+        radial-gradient(circle at 50% 50%, rgba(24, 24, 27, 1) 0 22%, transparent 23%),
+        repeating-radial-gradient(circle at 50% 50%, #111827 0 2px, #0f172a 3px 4px);
+    box-shadow:
+        inset 0 0 0 2px rgba(255,255,255,0.04),
+        0 10px 30px rgba(0,0,0,0.5);
+    transform: translate(-50%, -50%);
+    z-index: 1;
+}
+
+.avatar-container.playing .vinyl {
+    animation: spin 2.4s linear infinite;
+}
+
+.tonearm-wrap {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    width: 72px;
+    height: 5px;
+    z-index: 3;
+    transform-origin: right center;
+    transform: rotate(-28deg);
+    pointer-events: none;
+}
+
+.tonearm-wrap .tonearm {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, #a1a1aa, #f8fafc);
+    border-radius: 3px;
+    position: relative;
+}
+
+.tonearm-wrap .tonearm::after {
+    content: '';
+    position: absolute;
+    left: -5px;
+    top: -4px;
+    width: 13px;
+    height: 13px;
+    border-radius: 50%;
+    background: var(--accent-2);
+    box-shadow: 0 0 8px var(--accent-2);
+}
+
+.avatar-container.playing .tonearm-wrap {
+    transform: rotate(-92deg);
+}
+
 .avatar {
-    width: 140px;
-    height: 140px;
+    position: relative;
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid rgba(255,255,255,0.1);
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     background-color: #1f2937;
     cursor: pointer;
-}
-
-.avatar.playing {
-    animation: spin 8s linear infinite;
+    z-index: 2;
 }
 
 .avatar:hover {
@@ -138,7 +198,7 @@ section.visible {
 }
 
 @keyframes spin {
-    to { rotate: 360deg; }
+    to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
 h1 {
