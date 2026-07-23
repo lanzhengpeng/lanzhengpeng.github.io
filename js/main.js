@@ -187,10 +187,15 @@ window.addEventListener('mousemove', (e) => {
     player.targetX = e.clientX;
     player.targetY = e.clientY;
 });
-window.addEventListener('touchmove', (e) => {
+window.addEventListener('touchstart', (e) => {
     player.targetX = e.touches[0].clientX;
     player.targetY = e.touches[0].clientY;
 }, { passive: true });
+window.addEventListener('touchmove', (e) => {
+    e.preventDefault();
+    player.targetX = e.touches[0].clientX;
+    player.targetY = e.touches[0].clientY;
+}, { passive: false });
 
 function spawnItem() {
     items.push({
@@ -408,25 +413,20 @@ document.addEventListener('mousemove', (e) => {
 
 applyLanguage('en');
 
-// Music toggle: muted by default, click to play/pause
+// Avatar as music player: click to play/pause, spin like a record while playing
 const bgm = document.getElementById('bgm');
-const musicToggle = document.getElementById('music-toggle');
-const iconMute = document.getElementById('icon-mute');
-const iconPlay = document.getElementById('icon-play');
-if (bgm && musicToggle && iconMute && iconPlay) {
+if (bgm && avatar) {
     bgm.volume = 0.08;
     bgm.muted = true;
-    musicToggle.addEventListener('click', () => {
-        if (bgm.muted) {
+    avatar.addEventListener('click', () => {
+        if (bgm.muted || bgm.paused) {
             bgm.muted = false;
             bgm.play().catch(() => {});
-            iconMute.classList.add('hidden');
-            iconPlay.classList.remove('hidden');
+            avatar.classList.add('playing');
         } else {
             bgm.muted = true;
             bgm.pause();
-            iconMute.classList.remove('hidden');
-            iconPlay.classList.add('hidden');
+            avatar.classList.remove('playing');
         }
     });
 }
