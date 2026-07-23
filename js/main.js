@@ -11,7 +11,7 @@ const i18n = {
         lastUpdated: "Last updated: ",
         skillsTitle: "Skills",
         gameTitle: "Mini Game",
-        gameTip: "Move your mouse to catch the falling energy fragments.",
+        gameTip: "Move your mouse to guide the orb and collect falling fragments.",
         skills: [
             "Java",
             "Spring Boot",
@@ -41,7 +41,7 @@ const i18n = {
         lastUpdated: "最近更新：",
         skillsTitle: "技能",
         gameTitle: "互动小游戏",
-        gameTip: "移动鼠标控制底板，接住掉落的能量碎片。",
+        gameTip: "移动鼠标控制光球，收集掉落的紫色碎片。",
         skills: [
             "Java",
             "Spring Boot",
@@ -160,7 +160,7 @@ let particles = [];
 
 // Game state
 let score = 0;
-let player = { x: 0, width: 100, height: 6 };
+let player = { x: 0, y: 0, targetX: 0, targetY: 0, radius: 12 };
 let items = [];
 const scoreEl = document.getElementById('game-score');
 
@@ -171,12 +171,14 @@ function resize() {
 window.addEventListener('resize', resize);
 resize();
 
-// Game input: paddle follows mouse/touch anywhere on page
+// Game input: orb follows mouse/touch anywhere on page
 window.addEventListener('mousemove', (e) => {
-    player.x = e.clientX - player.width / 2;
+    player.targetX = e.clientX;
+    player.targetY = e.clientY;
 });
 window.addEventListener('touchmove', (e) => {
-    player.x = e.touches[0].clientX - player.width / 2;
+    player.targetX = e.touches[0].clientX;
+    player.targetY = e.touches[0].clientY;
 }, { passive: true });
 
 function spawnItem() {
@@ -185,25 +187,23 @@ function spawnItem() {
         y: -10,
         speed: Math.random() * 2 + 1.5,
         radius: Math.random() * 3 + 3,
-        color: Math.random() > 0.5 ? '#818cf8' : '#c084fc'
+        color: '#c084fc'
     });
     setTimeout(spawnItem, Math.random() * 1000 + 400);
 }
 setTimeout(spawnItem, 1000);
 
 function drawGame() {
-    if (player.x < 0) player.x = 0;
-    if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+    // Smooth orb movement
+    player.x += (player.targetX - player.x) * 0.15;
+    player.y += (player.targetY - player.y) * 0.15;
 
+    // Draw player orb
+    ctx.beginPath();
+    ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
     ctx.fillStyle = '#f8fafc';
     ctx.shadowColor = '#818cf8';
-    ctx.shadowBlur = 15;
-    ctx.beginPath();
-    if (ctx.roundRect) {
-        ctx.roundRect(player.x, canvas.height - 30, player.width, player.height, 3);
-    } else {
-        ctx.rect(player.x, canvas.height - 30, player.width, player.height);
-    }
+    ctx.shadowBlur = 20;
     ctx.fill();
     ctx.shadowBlur = 0;
 
@@ -219,10 +219,10 @@ function drawGame() {
         ctx.fill();
         ctx.shadowBlur = 0;
 
-        if (item.y + item.radius >= canvas.height - 30 &&
-            item.y - item.radius <= canvas.height - 30 + player.height &&
-            item.x >= player.x &&
-            item.x <= player.x + player.width) {
+        const dx = item.x - player.x;
+        const dy = item.y - player.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist <= item.radius + player.radius) {
             score += 10;
             if (scoreEl) scoreEl.textContent = score;
             items.splice(i, 1);
