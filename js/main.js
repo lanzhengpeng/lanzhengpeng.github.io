@@ -160,9 +160,24 @@ let particles = [];
 
 // Game state
 let score = 0;
-let player = { x: 0, y: 0, targetX: 0, targetY: 0, radius: 12 };
+let player = { x: 0, y: 0, targetX: 0, targetY: 0, radius: 12, tint: 0 };
 let items = [];
+let bursts = [];
 const scoreEl = document.getElementById('game-score');
+
+function hexToRgb(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    return { r: (n >> 16) & 255, g: (n >> 8) & 255, b: n & 255 };
+}
+
+function mixColor(hex1, hex2, t) {
+    const c1 = hexToRgb(hex1);
+    const c2 = hexToRgb(hex2);
+    const r = Math.round(c1.r + (c2.r - c1.r) * t);
+    const g = Math.round(c1.g + (c2.g - c1.g) * t);
+    const b = Math.round(c1.b + (c2.b - c1.b) * t);
+    return `rgb(${r}, ${g}, ${b})`;
+}
 
 function resize() {
     canvas.width = window.innerWidth;
@@ -194,15 +209,19 @@ function spawnItem() {
 setTimeout(spawnItem, 1000);
 
 function drawGame() {
-    // Smooth orb movement
-    player.x += (player.targetX - player.x) * 0.15;
-    player.y += (player.targetY - player.y) * 0.15;
+    // Follow mouse almost instantly
+    player.x += (player.targetX - player.x) * 0.85;
+    player.y += (player.targetY - player.y) * 0.85;
+
+    // Tint fades back to normal
+    player.tint *= 0.92;
 
     // Draw player orb
+    const playerColor = player.tint > 0.01 ? mixColor('#f8fafc', '#c084fc', player.tint) : '#f8fafc';
     ctx.beginPath();
     ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
-    ctx.fillStyle = '#f8fafc';
-    ctx.shadowColor = '#818cf8';
+    ctx.fillStyle = playerColor;
+    ctx.shadowColor = player.tint > 0.5 ? '#c084fc' : '#818cf8';
     ctx.shadowBlur = 20;
     ctx.fill();
     ctx.shadowBlur = 0;
@@ -225,10 +244,42 @@ function drawGame() {
         if (dist <= item.radius + player.radius) {
             score += 10;
             if (scoreEl) scoreEl.textContent = score;
+            // Burst effect
+            for (let k = 0; k < 10; k++) {
+                bursts.push({
+                    x: item.x,
+                    y: item.y,
+                    vx: (Math.random() - 0.5) * 8,
+                    vy: (Math.random() - 0.5) * 8,
+                    radius: Math.random() * 2 + 1,
+                    life: 1,
+                    decay: Math.random() * 0.04 + 0.02,
+                    color: item.color
+                });
+            }
+            player.tint = 1;
             items.splice(i, 1);
         } else if (item.y > canvas.height) {
             items.splice(i, 1);
         }
+    }
+
+    // Update and draw burst particles
+    for (let i = bursts.length - 1; i >= 0; i--) {
+        let b = bursts[i];
+        b.x += b.vx;
+        b.y += b.vy;
+        b.life -= b.decay;
+        if (b.life <= 0) {
+            bursts.splice(i, 1);
+            continue;
+        }
+        ctx.globalAlpha = b.life;
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, b.radius, 0, Math.PI * 2);
+        ctx.fillStyle = b.color;
+        ctx.fill();
+        ctx.globalAlpha = 1;
     }
 }
 
