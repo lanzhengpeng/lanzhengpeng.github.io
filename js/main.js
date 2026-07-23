@@ -200,7 +200,8 @@ function spawnItem() {
     items.push({
         x: Math.random() * (canvas.width - 20) + 10,
         y: -10,
-        speed: Math.random() * 2 + 1.5,
+        vx: (Math.random() - 0.5) * 1.2,
+        speed: Math.random() * 2 + 1.8,
         radius: Math.random() * 3 + 3,
         color: '#c084fc'
     });
@@ -228,13 +229,31 @@ function drawGame() {
 
     for (let i = items.length - 1; i >= 0; i--) {
         let item = items[i];
+        item.x += item.vx;
         item.y += item.speed;
 
+        // Meteor tail
+        const tailLength = item.speed * 18;
+        const angle = Math.atan2(item.speed, item.vx);
+        const tailX = item.x - Math.cos(angle) * tailLength;
+        const tailY = item.y - Math.sin(angle) * tailLength;
+        const tailGrad = ctx.createLinearGradient(item.x, item.y, tailX, tailY);
+        tailGrad.addColorStop(0, 'rgba(192, 132, 252, 0.9)');
+        tailGrad.addColorStop(1, 'rgba(192, 132, 252, 0)');
+        ctx.strokeStyle = tailGrad;
+        ctx.lineWidth = item.radius * 2;
+        ctx.lineCap = 'round';
+        ctx.beginPath();
+        ctx.moveTo(item.x, item.y);
+        ctx.lineTo(tailX, tailY);
+        ctx.stroke();
+
+        // Meteor head
         ctx.beginPath();
         ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
-        ctx.fillStyle = item.color;
+        ctx.fillStyle = '#f8fafc';
         ctx.shadowColor = item.color;
-        ctx.shadowBlur = 10;
+        ctx.shadowBlur = 12;
         ctx.fill();
         ctx.shadowBlur = 0;
 
@@ -259,7 +278,7 @@ function drawGame() {
             }
             player.tint = 1;
             items.splice(i, 1);
-        } else if (item.y > canvas.height) {
+        } else if (item.y > canvas.height || item.x < -50 || item.x > canvas.width + 50) {
             items.splice(i, 1);
         }
     }
@@ -298,19 +317,54 @@ class Particle {
         if (this.y < 0 || this.y > canvas.height) this.vy *= -1;
     }
     draw() {
+        const alpha = Math.random() * 0.4 + 0.4;
         ctx.beginPath();
         ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-        ctx.fillStyle = 'rgba(129, 140, 248, 0.4)';
+        ctx.fillStyle = `rgba(224, 231, 255, ${alpha})`;
         ctx.fill();
     }
 }
 
 function initParticles() {
     particles = [];
-    const count = Math.min(window.innerWidth / 15, 70);
+    const count = Math.min(window.innerWidth / 10, 120);
     for (let i = 0; i < count; i++) particles.push(new Particle());
 }
 initParticles();
+
+function drawMoon() {
+    const x = canvas.width - 90;
+    const y = 90;
+    const r = 40;
+
+    // Outer glow
+    const glow = ctx.createRadialGradient(x, y, r * 0.7, x, y, r * 3.5);
+    glow.addColorStop(0, 'rgba(255, 255, 255, 0.18)');
+    glow.addColorStop(0.4, 'rgba(165, 180, 252, 0.06)');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow;
+    ctx.beginPath();
+    ctx.arc(x, y, r * 3.5, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Moon body
+    const moonGrad = ctx.createRadialGradient(x - r * 0.25, y - r * 0.25, r * 0.1, x, y, r);
+    moonGrad.addColorStop(0, '#f8fafc');
+    moonGrad.addColorStop(1, '#a5b4fc');
+    ctx.fillStyle = moonGrad;
+    ctx.beginPath();
+    ctx.arc(x, y, r, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Soft inner shadow/crater hint
+    ctx.fillStyle = 'rgba(99, 102, 241, 0.12)';
+    ctx.beginPath();
+    ctx.arc(x + r * 0.35, y + r * 0.2, r * 0.18, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(x - r * 0.1, y + r * 0.45, r * 0.12, 0, Math.PI * 2);
+    ctx.fill();
+}
 
 function animateParticles() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -322,7 +376,7 @@ function animateParticles() {
             const dist = Math.sqrt(dx * dx + dy * dy);
             if (dist < 100) {
                 ctx.beginPath();
-                ctx.strokeStyle = `rgba(129, 140, 248, ${0.1 * (1 - dist / 100)})`;
+                ctx.strokeStyle = `rgba(165, 180, 252, ${0.08 * (1 - dist / 100)})`;
                 ctx.lineWidth = 1;
                 ctx.moveTo(particles[i].x, particles[i].y);
                 ctx.lineTo(particles[j].x, particles[j].y);
@@ -330,6 +384,7 @@ function animateParticles() {
             }
         }
     }
+    drawMoon();
     drawGame();
     requestAnimationFrame(animateParticles);
 }
