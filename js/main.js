@@ -232,21 +232,32 @@ function drawGame() {
         item.x += item.vx;
         item.y += item.speed;
 
-        // Meteor tail
-        const tailLength = item.speed * 18;
+        // Meteor tail (longer and tapering to a fine point)
+        const tailLength = item.speed * 36;
         const angle = Math.atan2(item.speed, item.vx);
         const tailX = item.x - Math.cos(angle) * tailLength;
         const tailY = item.y - Math.sin(angle) * tailLength;
-        const tailGrad = ctx.createLinearGradient(item.x, item.y, tailX, tailY);
-        tailGrad.addColorStop(0, 'rgba(192, 132, 252, 0.9)');
-        tailGrad.addColorStop(1, 'rgba(192, 132, 252, 0)');
-        ctx.strokeStyle = tailGrad;
-        ctx.lineWidth = item.radius * 2;
-        ctx.lineCap = 'round';
-        ctx.beginPath();
-        ctx.moveTo(item.x, item.y);
-        ctx.lineTo(tailX, tailY);
-        ctx.stroke();
+
+        const steps = 14;
+        for (let s = 0; s < steps; s++) {
+            const t1 = s / steps;
+            const t2 = (s + 1) / steps;
+            const x1 = item.x - Math.cos(angle) * tailLength * t1;
+            const y1 = item.y - Math.sin(angle) * tailLength * t1;
+            const x2 = item.x - Math.cos(angle) * tailLength * t2;
+            const y2 = item.y - Math.sin(angle) * tailLength * t2;
+            const width = item.radius * 2 * (1 - t1) + 0.4 * t1;
+            const segGrad = ctx.createLinearGradient(x1, y1, x2, y2);
+            segGrad.addColorStop(0, `rgba(192, 132, 252, ${0.9 * (1 - t1)})`);
+            segGrad.addColorStop(1, `rgba(192, 132, 252, ${0.9 * (1 - t2)})`);
+            ctx.strokeStyle = segGrad;
+            ctx.lineWidth = width;
+            ctx.lineCap = 'round';
+            ctx.beginPath();
+            ctx.moveTo(x1, y1);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+        }
 
         // Meteor head
         ctx.beginPath();
@@ -333,9 +344,9 @@ function initParticles() {
 initParticles();
 
 function drawMoon() {
-    const x = canvas.width - 90;
-    const y = 90;
-    const r = 40;
+    const x = canvas.width - 110;
+    const y = 110;
+    const r = 80;
 
     // Outer glow
     const glow = ctx.createRadialGradient(x, y, r * 0.7, x, y, r * 3.5);
