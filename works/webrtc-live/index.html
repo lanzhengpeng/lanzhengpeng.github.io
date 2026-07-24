@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WebRTC 直播 - 兰政鹏</title>
+    <script>
+        (function () {
+            const stored = localStorage.getItem('theme');
+            const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="top-bar">
+        <a href="/works/" class="back-link">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            返回作品页
+        </a>
+        <div class="theme-switch" id="theme-switch" aria-label="切换主题">
+            <button aria-label="切换主题">
+                <svg class="icon-light" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg class="icon-dark" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>WebRTC 直播</h1>
+        <p class="subtitle">同一局域网内，手机扫码即可观看电脑直播</p>
+
+        <div class="card" style="text-align: center;">
+            <p style="color: var(--text-muted); margin-bottom: 1.5rem;">这是一个 WebRTC 点对点直播演示，无需服务器中转媒体流，适合局域网内快速演示。</p>
+            <a href="broadcaster.html" class="btn" style="margin-right: 0.5rem;">我是主播</a>
+            <a href="viewer.html" class="btn" style="background: var(--accent-2);">我是观众</a>
+        </div>
+
+        <div class="card">
+            <h2 style="font-size: 1.1rem; margin-bottom: 0.75rem;">使用方式</h2>
+            <ol class="info-list" style="list-style: decimal inside; padding-left: 0;">
+                <li style="padding-left: 0;">电脑打开 <a href="broadcaster.html" style="color: var(--accent);">我是主播</a></li>
+                <li style="padding-left: 0;">点击“开始直播”，选择要分享的屏幕或窗口</li>
+                <li style="padding-left: 0;">用手机扫描二维码，或复制链接发给同 Wi-Fi 下的观众</li>
+                <li style="padding-left: 0;">手机上点击“连接直播”即可观看</li>
+            </ol>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 兰政鹏。</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

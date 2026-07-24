@@ -1,0 +1,245 @@
+:root {
+    --bg: #09090b;
+    --text-main: #f8fafc;
+    --text-muted: #a1a1aa;
+    --accent: #818cf8;
+    --accent-2: #c084fc;
+    --card-bg: rgba(255, 255, 255, 0.03);
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-border-hover: rgba(255, 255, 255, 0.15);
+    --card-shadow: rgba(0, 0, 0, 0.2);
+    --link-bg: rgba(255, 255, 255, 0.03);
+    --link-bg-hover: rgba(255, 255, 255, 0.08);
+    --bg-glow-1: rgba(76, 29, 149, 0.25);
+    --bg-glow-2: rgba(30, 58, 138, 0.18);
+}
+
+[data-theme="light"] {
+    --bg: #f8fafc;
+    --text-main: #09090b;
+    --text-muted: #52525b;
+    --accent: #4f46e5;
+    --accent-2: #9333ea;
+    --card-bg: rgba(0, 0, 0, 0.03);
+    --card-border: rgba(0, 0, 0, 0.08);
+    --card-border-hover: rgba(0, 0, 0, 0.2);
+    --card-shadow: rgba(0, 0, 0, 0.08);
+    --link-bg: rgba(0, 0, 0, 0.03);
+    --link-bg-hover: rgba(0, 0, 0, 0.08);
+    --bg-glow-1: transparent;
+    --bg-glow-2: transparent;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background:
+        radial-gradient(circle at 80% 5%, var(--bg-glow-1), transparent 35%),
+        radial-gradient(circle at 20% 25%, var(--bg-glow-2), transparent 40%),
+        var(--bg);
+    color: var(--text-main);
+    line-height: 1.7;
+    min-height: 100vh;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.top-bar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.5rem;
+    z-index: 100;
+}
+
+.back-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.45rem 1rem;
+    border-radius: 9999px;
+    background: var(--link-bg);
+    border: 1px solid var(--card-border);
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.back-link:hover {
+    background: var(--link-bg-hover);
+    border-color: var(--card-border-hover);
+}
+
+.theme-switch {
+    display: flex;
+    background: var(--link-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 9999px;
+    padding: 0.3rem;
+    backdrop-filter: blur(10px);
+}
+
+.theme-switch button {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.theme-switch .icon-light,
+.theme-switch .icon-dark {
+    position: absolute;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.theme-switch .icon-light {
+    opacity: 0;
+    transform: rotate(-90deg);
+}
+
+.theme-switch .icon-dark {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+[data-theme="light"] .theme-switch .icon-light {
+    opacity: 1;
+    transform: rotate(0deg);
+}
+
+[data-theme="light"] .theme-switch .icon-dark {
+    opacity: 0;
+    transform: rotate(90deg);
+}
+
+.container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 8rem 1.5rem 4rem;
+}
+
+h1 {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-size: 1.1rem;
+    margin-bottom: 3rem;
+}
+
+.project-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 1.5rem;
+}
+
+.project-card {
+    padding: 1.5rem;
+    border-radius: 1rem;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    border-color: var(--card-border-hover);
+    box-shadow: 0 12px 32px var(--card-shadow);
+}
+
+.project-card h2 {
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.project-desc {
+    color: var(--text-muted);
+    font-size: 0.95rem;
+    flex: 1;
+}
+
+.project-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+
+.project-tags span {
+    padding: 0.2rem 0.6rem;
+    border-radius: 9999px;
+    background: var(--link-bg);
+    border: 1px solid var(--card-border);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.project-card a {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--accent);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    margin-top: auto;
+}
+
+.project-card a:hover {
+    text-decoration: underline;
+}
+
+.project-card.placeholder {
+    opacity: 0.6;
+}
+
+footer {
+    text-align: center;
+    padding: 2rem 1rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+@media (max-width: 640px) {
+    h1 {
+        font-size: 2.25rem;
+    }
+
+    .container {
+        padding-top: 7rem;
+    }
+
+    .project-grid {
+        grid-template-columns: 1fr;
+    }
+}

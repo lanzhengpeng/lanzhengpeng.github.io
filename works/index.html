@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人作品 - 兰政鹏</title>
+    <meta name="description" content="兰政鹏的个人作品展示">
+    <script>
+        (function () {
+            const stored = localStorage.getItem('theme');
+            const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="top-bar">
+        <a href="/" class="back-link">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            返回
+        </a>
+        <div class="theme-switch" id="theme-switch" aria-label="切换主题">
+            <button aria-label="切换主题">
+                <svg class="icon-light" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg class="icon-dark" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>个人作品</h1>
+        <p class="subtitle">精选项目与实验作品。</p>
+
+        <div class="project-grid" id="project-grid">
+            <article class="project-card">
+                <h2>LatentReAct 研究</h2>
+                <p class="project-desc">面向工具调用智能体的隐空间验证框架，提升多步推理的稳定性。</p>
+                <div class="project-tags">
+                    <span>Python</span>
+                    <span>PyTorch</span>
+                    <span>大语言模型</span>
+                </div>
+                <a href="https://link.springer.com/chapter/10.1007/978-981-92-3557-5_1" target="_blank" rel="noopener">查看论文</a>
+            </article>
+
+            <article class="project-card">
+                <h2>个人主页</h2>
+                <p class="project-desc">本网站 —— 带有交互式背景、计数器与 Cloudflare Functions 的个人主页。</p>
+                <div class="project-tags">
+                    <span>HTML</span>
+                    <span>CSS</span>
+                    <span>Cloudflare</span>
+                </div>
+                <a href="/">访问网站</a>
+            </article>
+
+            <article class="project-card">
+                <h2>WebRTC 局域网直播</h2>
+                <p class="project-desc">同一 Wi-Fi 下手机扫码即可观看电脑屏幕直播，信令通过 Cloudflare Function + KV 交换，媒体流点对点传输。</p>
+                <div class="project-tags">
+                    <span>WebRTC</span>
+                    <span>Cloudflare</span>
+                    <span>JavaScript</span>
+                </div>
+                <a href="webrtc-live/">查看详情</a>
+            </article>
+
+            <article class="project-card placeholder">
+                <h2>更多作品</h2>
+                <p class="project-desc">新项目将陆续添加到这里。</p>
+                <div class="project-tags">
+                    <span>待更新</span>
+                </div>
+            </article>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 兰政鹏。</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+</body>
+</html>

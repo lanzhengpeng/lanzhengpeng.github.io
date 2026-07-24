@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>观众端 - WebRTC 直播</title>
+    <script>
+        (function () {
+            const stored = localStorage.getItem('theme');
+            const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+            document.documentElement.dataset.theme = theme;
+        })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="top-bar">
+        <a href="/works/webrtc-live/broadcaster.html" class="back-link">
+            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+            我是主播
+        </a>
+        <div class="theme-switch" id="theme-switch" aria-label="切换主题">
+            <button aria-label="切换主题">
+                <svg class="icon-light" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                <svg class="icon-dark" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+            </button>
+        </div>
+    </header>
+
+    <main class="container">
+        <h1>观看直播</h1>
+        <p class="subtitle" id="room-label">房间号：-</p>
+
+        <div class="card">
+            <video id="remote-video" autoplay playsinline></video>
+            <button id="connect-btn" class="btn">连接直播</button>
+            <div id="status" class="status">点击按钮连接主播...</div>
+        </div>
+
+        <ul class="info-list">
+            <li>请确保手机和电脑连接同一个 Wi-Fi</li>
+            <li>如果画面卡顿，请靠近路由器或降低主播分辨率</li>
+            <li>仅支持一对一局域网直播演示</li>
+        </ul>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 兰政鹏。</p>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script src="js/viewer.js"></script>
+</body>
+</html>
