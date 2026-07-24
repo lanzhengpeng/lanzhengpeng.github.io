@@ -38,8 +38,8 @@
 
 .btn:hover {
     transform: translateY(-2px);
-    background: #e2e8f0;
-    box-shadow: 0 10px 25px rgba(255, 255, 255, 0.1);
+    background: var(--text-muted);
+    box-shadow: 0 10px 25px var(--shadow-color);
 }
 
 .btn-group {
@@ -55,7 +55,7 @@
 }
 
 .btn-secondary:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.2);
+    background: var(--surface-hover);
+    border-color: var(--card-border-hover);
     box-shadow: none;
 }

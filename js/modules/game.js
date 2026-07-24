@@ -9,6 +9,16 @@ let items = [];
 let bursts = [];
 const itemColors = ['#c084fc', '#818cf8', '#38bdf8', '#2dd4bf', '#fbbf24', '#fb7185'];
 const scoreEl = document.getElementById('game-score');
+let nextSpawnTime = performance.now() + 1000;
+
+function cssVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
+function getPlayerColor() {
+    const theme = document.documentElement.dataset.theme || 'dark';
+    return theme === 'light' ? '#0f172a' : '#f8fafc';
+}
 
 window.addEventListener('mousemove', (e) => {
     player.targetX = e.clientX;
@@ -24,30 +34,32 @@ window.addEventListener('touchmove', (e) => {
     player.targetY = e.touches[0].clientY;
 }, { passive: false });
 
-function spawnItem() {
-    items.push({
-        x: Math.random() * (canvas.width - 20) + 10,
-        y: -10,
-        vx: (Math.random() - 0.5) * 1.2,
-        speed: Math.random() * 2 + 1.8,
-        radius: Math.random() * 3 + 3,
-        color: itemColors[Math.floor(Math.random() * itemColors.length)]
-    });
-    setTimeout(spawnItem, Math.random() * 1000 + 400);
-}
-setTimeout(spawnItem, 1000);
-
 export function drawGame() {
+    const now = performance.now();
+
+    if (now >= nextSpawnTime) {
+        items.push({
+            x: Math.random() * (canvas.width - 20) + 10,
+            y: -10,
+            vx: (Math.random() - 0.5) * 1.2,
+            speed: Math.random() * 2 + 1.8,
+            radius: Math.random() * 3 + 3,
+            color: itemColors[Math.floor(Math.random() * itemColors.length)]
+        });
+        nextSpawnTime = now + Math.random() * 1000 + 400;
+    }
+
     player.x += (player.targetX - player.x) * 0.85;
     player.y += (player.targetY - player.y) * 0.85;
 
     player.tint *= 0.92;
 
-    const playerColor = player.tint > 0.01 ? mixColor('#f8fafc', player.tintColor, player.tint) : '#f8fafc';
+    const basePlayerColor = getPlayerColor();
+    const playerColor = player.tint > 0.01 ? mixColor(basePlayerColor, player.tintColor, player.tint) : basePlayerColor;
     ctx.beginPath();
     ctx.arc(player.x, player.y, player.radius, 0, Math.PI * 2);
     ctx.fillStyle = playerColor;
-    ctx.shadowColor = player.tint > 0.5 ? player.tintColor : '#818cf8';
+    ctx.shadowColor = player.tint > 0.5 ? player.tintColor : cssVar('--accent');
     ctx.shadowBlur = 20;
     ctx.fill();
     ctx.shadowBlur = 0;
@@ -85,7 +97,7 @@ export function drawGame() {
 
         ctx.beginPath();
         ctx.arc(item.x, item.y, item.radius, 0, Math.PI * 2);
-        ctx.fillStyle = '#f8fafc';
+        ctx.fillStyle = basePlayerColor;
         ctx.shadowColor = item.color;
         ctx.shadowBlur = 12;
         ctx.fill();

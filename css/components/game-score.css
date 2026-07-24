@@ -9,5 +9,13 @@
     color: var(--accent);
     font-family: monospace;
     pointer-events: none;
-    text-shadow: 0 0 10px rgba(129, 140, 248, 0.5);
+    text-shadow: 0 0 10px rgba(var(--accent-rgb), 0.5);
+}
+
+[data-theme="light"] .game-score {
+    display: none;
+}
+
+[data-theme="dark"] .game-score {
+    display: none;
 }

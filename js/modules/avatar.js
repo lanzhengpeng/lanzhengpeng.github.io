@@ -3,11 +3,9 @@ import { musicNotes } from './background.js';
 const avatar = document.getElementById('avatar');
 
 document.addEventListener('mousemove', (e) => {
-    if (window.innerWidth > 768) {
-        const x = (e.clientX / window.innerWidth - 0.5) * 15;
-        const y = (e.clientY / window.innerHeight - 0.5) * 15;
-        avatar.style.transform = `translate(${x}px, ${y}px)`;
-    }
+    const x = (e.clientX / window.innerWidth - 0.5) * 15;
+    const y = (e.clientY / window.innerHeight - 0.5) * 15;
+    avatar.style.transform = `translate(${x}px, ${y}px)`;
 });
 
 const bgm = document.getElementById('bgm');

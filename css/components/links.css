@@ -9,7 +9,7 @@
 .links a {
     padding: 0.6rem 1.5rem;
     border-radius: 9999px;
-    background: rgba(255, 255, 255, 0.03);
+    background: var(--link-bg);
     color: var(--text-main);
     text-decoration: none;
     font-size: 0.9rem;
@@ -22,7 +22,7 @@
 }
 
 .links a:hover {
-    background: rgba(255, 255, 255, 0.08);
-    border-color: rgba(255,255,255,0.2);
+    background: var(--link-bg-hover);
+    border-color: var(--card-border-hover);
     transform: translateY(-2px);
 }
