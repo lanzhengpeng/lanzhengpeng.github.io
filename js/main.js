@@ -5,6 +5,7 @@ import './modules/background.js';
 import './modules/game.js';
 import './modules/avatar.js';
 import './modules/boids.js';
+import './modules/stats.js';
 
 initTheme();
 applyLanguage('en');

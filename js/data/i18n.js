@@ -9,6 +9,8 @@ export const i18n = {
         downloadBtn: "Download PDF",
         viewSpringer: "View on Springer",
         lastUpdated: "Last updated: ",
+        likeBtn: "Like",
+        visitorsLabel: "Visitors",
         skillsTitle: "Skills",
         skills: [
             "Java",
@@ -37,6 +39,8 @@ export const i18n = {
         downloadBtn: "下载 PDF",
         viewSpringer: "Springer 查看",
         lastUpdated: "最近更新：",
+        likeBtn: "点赞",
+        visitorsLabel: "访客",
         skillsTitle: "技能",
         skills: [
             "Java",
