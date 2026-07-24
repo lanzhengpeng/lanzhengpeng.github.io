@@ -55,7 +55,53 @@
     text-align: center;
 }
 
+.plus-one-counter {
+    position: fixed;
+    top: 1.6rem;
+    left: 1rem;
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+}
+
+.plus-one-btn {
+    padding: 0.35rem 0.8rem;
+    border-radius: 9999px;
+    background: var(--link-bg);
+    color: var(--text-main);
+    border: 1px solid var(--card-border);
+    backdrop-filter: blur(10px);
+    transition: all 0.2s ease;
+    cursor: pointer;
+    font-weight: 600;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
+.plus-one-btn:hover {
+    background: var(--link-bg-hover);
+    border-color: var(--card-border-hover);
+    transform: translateY(-2px);
+}
+
+.plus-one-btn:active {
+    transform: translateY(0);
+}
+
 @media (max-width: 640px) {
+    .plus-one-counter {
+        top: 4.2rem;
+        left: 0.75rem;
+        font-size: 0.8rem;
+    }
+
+    .plus-one-btn {
+        padding: 0.3rem 0.65rem;
+    }
+
     .visitor-counter {
         top: 4.5rem;
         font-size: 0.75rem;

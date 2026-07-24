@@ -11,6 +11,8 @@
 const likeBtn = document.getElementById('like-btn');
 const likeCountEl = document.getElementById('like-count');
 const visitorCountEl = document.getElementById('visitor-count');
+const plusOneBtn = document.getElementById('plus-one-btn');
+const plusOneCountEl = document.getElementById('plus-one-count');
 
 function setText(el, value) {
   if (el) el.textContent = value;
@@ -85,6 +87,32 @@ function initLikeButton() {
   });
 }
 
+async function initPlusOneCount() {
+  try {
+    const data = await fetchCount('/plus-one');
+    setText(plusOneCountEl, data.count);
+  } catch (err) {
+    console.error('Failed to load +1 count:', err);
+  }
+}
+
+function initPlusOneButton() {
+  if (!plusOneBtn) return;
+
+  plusOneBtn.addEventListener('click', async () => {
+    try {
+      const res = await fetch('/plus-one', { method: 'POST' });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      setText(plusOneCountEl, data.count);
+    } catch (err) {
+      console.error('Failed to +1:', err);
+    }
+  });
+}
+
 initLikeCount();
 initVisitorCount();
 initLikeButton();
+initPlusOneCount();
+initPlusOneButton();
