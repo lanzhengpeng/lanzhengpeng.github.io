@@ -64,12 +64,17 @@
 在项目根目录运行：
 
 ```bash
-npx wrangler pages dev . --kv=PORTFOLIO_KV --port=8080
+npx wrangler pages dev . --kv=PORTFOLIO_KV --port 8080 --ip 0.0.0.0
 ```
 
 首次运行会提示安装 Wrangler，按 `y` 确认即可。
 
-启动后访问：http://localhost:8080
+启动后：
+
+- 本机访问：http://localhost:8080
+- 同一局域网内其他设备访问：http://192.168.1.6:8080（请把 `192.168.1.6` 替换为你电脑的局域网 IP）
+
+> 绑定 `--ip 0.0.0.0` 是为了让同一 Wi-Fi 下的手机也能访问，测试 WebRTC 直播等需要扫码的功能时必须这样启动。
 
 Wrangler 会自动处理：
 
