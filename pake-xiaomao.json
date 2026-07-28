@@ -1,0 +1,17 @@
+{
+  "url": "https://lanzhengpeng.github.io/works/webrtc-live/",
+  "name": "XiaomaoLive",
+  "identifier": "io.github.lanzhengpeng.xiaomaolive",
+  "icon": "icons/works.png",
+  "title": "小猫直播",
+  "width": 1200,
+  "height": 800,
+  "minWidth": 900,
+  "minHeight": 600,
+  "appVersion": "1.0.0",
+  "darkMode": true,
+  "camera": true,
+  "microphone": true,
+  "safeDomain": "lanzhengpeng.github.io",
+  "enableFind": false
+}

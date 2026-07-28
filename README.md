@@ -107,6 +107,40 @@ Wrangler 会自动处理：
 3. 进入项目设置 → Functions → KV namespace bindings
 4. 添加绑定名称为 `PORTFOLIO_KV` 的 KV 命名空间
 
+## 桌面客户端（Pake）
+
+使用 [Pake](https://github.com/tw93/Pake) 将「小猫直播」打包为轻量桌面应用，支持 macOS、Windows、Linux。
+
+### 本地构建
+
+需要 Node.js 18+ 和 Rust 工具链。
+
+```bash
+npm install
+
+# macOS
+npm run pake:mac
+
+# Windows
+npm run pake:win
+
+# Linux
+npm run pake:linux
+```
+
+构建产物会自动收集到 `dist/` 目录。
+
+### GitHub Actions 自动构建
+
+推送 `v*` 标签即可触发跨平台构建：
+
+```bash
+git tag -a v1.0.0 -m "Release v1.0.0"
+git push origin v1.0.0
+```
+
+构建完成后，安装包会作为 Artifacts 上传，并在 Release 页面发布。
+
 ## License
 
 MIT

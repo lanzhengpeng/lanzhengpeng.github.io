@@ -30,6 +30,21 @@
     transition: opacity 0.5s ease;
 }
 
+.progress-ring::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, transparent 0%, var(--accent) 60%, transparent 100%);
+    -webkit-mask: radial-gradient(transparent 62%, black 63%);
+    mask: radial-gradient(transparent 62%, black 63%);
+    animation: spin-ring 1.2s linear infinite;
+}
+
+[data-theme="light"] .progress-ring::before {
+    background: conic-gradient(from 0deg, transparent 0%, #0ea5e9 60%, transparent 100%);
+}
+
 [data-theme="light"] .progress-ring {
     background: conic-gradient(#0ea5e9 calc(var(--progress, 0) * 1%), var(--card-border) 0);
 }
@@ -155,6 +170,7 @@
     transform: rotate(25deg);
     transition: transform 0.5s ease;
     pointer-events: none;
+    transform-box: border-box;
     --tonearm-color: #f8fafc;
     --tonearm-contrast: #09090b;
 }

@@ -46,12 +46,14 @@
     transform: rotate(0deg);
 }
 
-[data-theme="light"] .theme-switch .icon-light {
+[data-theme="light"] .theme-switch .icon-light,
+.theme-switch.is-light .icon-light {
     opacity: 1;
     transform: rotate(0deg);
 }
 
-[data-theme="light"] .theme-switch .icon-dark {
+[data-theme="light"] .theme-switch .icon-dark,
+.theme-switch.is-light .icon-dark {
     opacity: 0;
     transform: rotate(90deg);
 }

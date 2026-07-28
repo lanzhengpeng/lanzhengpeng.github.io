@@ -1,20 +1,29 @@
 const SIGNAL_URL = '/webrtc-signal';
+
 let roomId = '';
 let viewerHost = '';
 let pc = null;
 let localStream = null;
+let pollInterval = null;
+let listeners = [];
 
-const videoEl = document.getElementById('local-video');
-const startBtn = document.getElementById('start-btn');
-const stopBtn = document.getElementById('stop-btn');
-const statusEl = document.getElementById('status');
-const qrcodeEl = document.getElementById('qrcode');
-const urlTextEl = document.getElementById('url-text');
-const manualIpWrap = document.getElementById('manual-ip-wrap');
-const manualIpInput = document.getElementById('manual-ip');
-const applyIpBtn = document.getElementById('apply-ip-btn');
+let videoEl = null;
+let startBtn = null;
+let stopBtn = null;
+let statusEl = null;
+let qrcodeEl = null;
+let urlTextEl = null;
+let manualIpWrap = null;
+let manualIpInput = null;
+let applyIpBtn = null;
+
+function bind(target, event, handler, options) {
+    target.addEventListener(event, handler, options);
+    listeners.push({ target, event, handler, options });
+}
 
 function setStatus(text, type = '') {
+    if (!statusEl) return;
     statusEl.textContent = text;
     statusEl.className = 'status ' + type;
 }
@@ -81,6 +90,7 @@ async function resolveViewerHost() {
 }
 
 function updateQR() {
+    if (!qrcodeEl || !urlTextEl || !viewerHost || !roomId) return;
     const viewerUrl = `http://${viewerHost}/works/webrtc-live/viewer.html?room=${roomId}`;
     urlTextEl.textContent = viewerUrl;
     qrcodeEl.innerHTML = '';
@@ -139,13 +149,22 @@ async function pollAnswer() {
 }
 
 async function beginStreaming() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+        setStatus(
+            '当前环境不支持屏幕共享。请使用 https://、localhost 或 127.0.0.1 访问，' +
+                '勿直接通过局域网 IP 打开。',
+            'error'
+        );
+        return;
+    }
+
     setStatus('正在获取屏幕共享...');
     try {
         localStream = await navigator.mediaDevices.getDisplayMedia({
             video: true,
             audio: true,
         });
-        videoEl.srcObject = localStream;
+        if (videoEl) videoEl.srcObject = localStream;
     } catch (e) {
         setStatus('无法获取屏幕共享：' + e.message, 'error');
         return;
@@ -170,12 +189,13 @@ async function beginStreaming() {
     await postSignal('offer', offer);
 
     setStatus('等待观众扫码连接...');
-    startBtn.disabled = true;
-    stopBtn.disabled = false;
+    if (startBtn) startBtn.disabled = true;
+    if (stopBtn) stopBtn.disabled = false;
 
-    const pollInterval = setInterval(() => {
+    pollInterval = setInterval(() => {
         if (!pc) {
             clearInterval(pollInterval);
+            pollInterval = null;
             return;
         }
         pollAnswer();
@@ -199,6 +219,7 @@ async function startBroadcast() {
 }
 
 function applyManualIp() {
+    if (!manualIpInput) return;
     const ip = manualIpInput.value.trim();
     if (!ip) {
         setStatus('请输入有效的 IP 地址', 'error');
@@ -211,6 +232,10 @@ function applyManualIp() {
 }
 
 function stopBroadcast() {
+    if (pollInterval) {
+        clearInterval(pollInterval);
+        pollInterval = null;
+    }
     if (localStream) {
         localStream.getTracks().forEach((track) => track.stop());
         localStream = null;
@@ -219,15 +244,50 @@ function stopBroadcast() {
         pc.close();
         pc = null;
     }
-    videoEl.srcObject = null;
-    qrcodeEl.innerHTML = '';
-    urlTextEl.textContent = '';
+    if (videoEl) videoEl.srcObject = null;
+    if (qrcodeEl) qrcodeEl.innerHTML = '';
+    if (urlTextEl) urlTextEl.textContent = '';
     hideManualIp();
     setStatus('直播已停止');
-    startBtn.disabled = false;
-    stopBtn.disabled = true;
+    if (startBtn) startBtn.disabled = false;
+    if (stopBtn) stopBtn.disabled = true;
 }
 
-startBtn.addEventListener('click', startBroadcast);
-stopBtn.addEventListener('click', stopBroadcast);
-if (applyIpBtn) applyIpBtn.addEventListener('click', applyManualIp);
+function bindControls() {
+    if (startBtn) bind(startBtn, 'click', startBroadcast);
+    if (stopBtn) bind(stopBtn, 'click', stopBroadcast);
+    if (applyIpBtn) bind(applyIpBtn, 'click', applyManualIp);
+}
+
+export function init() {
+    destroy();
+
+    videoEl = document.getElementById('local-video');
+    startBtn = document.getElementById('start-btn');
+    stopBtn = document.getElementById('stop-btn');
+    statusEl = document.getElementById('status');
+    qrcodeEl = document.getElementById('qrcode');
+    urlTextEl = document.getElementById('url-text');
+    manualIpWrap = document.getElementById('manual-ip-wrap');
+    manualIpInput = document.getElementById('manual-ip');
+    applyIpBtn = document.getElementById('apply-ip-btn');
+
+    bindControls();
+}
+
+export function destroy() {
+    stopBroadcast();
+    listeners.forEach(({ target, event, handler, options }) => {
+        target.removeEventListener(event, handler, options);
+    });
+    listeners = [];
+    videoEl = null;
+    startBtn = null;
+    stopBtn = null;
+    statusEl = null;
+    qrcodeEl = null;
+    urlTextEl = null;
+    manualIpWrap = null;
+    manualIpInput = null;
+    applyIpBtn = null;
+}

@@ -5,3 +5,16 @@ node_modules/
 .wrangler/
 .dev.vars
 
+# Pake / Tauri build artifacts
+src-tauri/
+target/
+dist/
+*.dmg
+*.msi
+*.deb
+*.AppImage
+*.rpm
+*.zst
+*.app
+package-lock.json
+

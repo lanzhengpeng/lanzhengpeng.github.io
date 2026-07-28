@@ -1,15 +1,16 @@
 import { hexToRgb, mixColor, hexToRgba } from '../utils/helpers.js';
 
 const canvas = document.getElementById('canvas-bg');
-const ctx = canvas.getContext('2d');
+const ctx = canvas ? canvas.getContext('2d') : null;
 
 let score = 0;
 let player = { x: 0, y: 0, targetX: 0, targetY: 0, radius: 12, tint: 0, tintColor: '#c084fc' };
 let items = [];
 let bursts = [];
 const itemColors = ['#c084fc', '#818cf8', '#38bdf8', '#2dd4bf', '#fbbf24', '#fb7185'];
-const scoreEl = document.getElementById('game-score');
 let nextSpawnTime = performance.now() + 1000;
+let enabled = false;
+let listeners = [];
 
 function cssVar(name) {
     return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
@@ -20,22 +21,61 @@ function getPlayerColor() {
     return theme === 'light' ? '#0f172a' : '#f8fafc';
 }
 
-window.addEventListener('mousemove', (e) => {
+function onMouseMove(e) {
     player.targetX = e.clientX;
     player.targetY = e.clientY;
-});
-window.addEventListener('touchstart', (e) => {
+}
+
+function onTouchStart(e) {
     player.targetX = e.touches[0].clientX;
     player.targetY = e.touches[0].clientY;
-}, { passive: true });
-window.addEventListener('touchmove', (e) => {
+}
+
+function onTouchMove(e) {
     e.preventDefault();
     player.targetX = e.touches[0].clientX;
     player.targetY = e.touches[0].clientY;
-}, { passive: false });
+}
+
+function bind(target, event, handler, options) {
+    target.addEventListener(event, handler, options);
+    listeners.push({ target, event, handler, options });
+}
+
+export function initGame() {
+    destroyGame();
+    enabled = true;
+    score = 0;
+    items = [];
+    bursts = [];
+    player = { x: 0, y: 0, targetX: 0, targetY: 0, radius: 12, tint: 0, tintColor: '#c084fc' };
+    nextSpawnTime = performance.now() + 1000;
+
+    const scoreEl = document.getElementById('game-score');
+    if (scoreEl) scoreEl.textContent = '0';
+
+    bind(window, 'mousemove', onMouseMove);
+    bind(window, 'touchstart', onTouchStart, { passive: true });
+    bind(window, 'touchmove', onTouchMove, { passive: false });
+}
+
+export function destroyGame() {
+    enabled = false;
+    listeners.forEach(({ target, event, handler, options }) => {
+        target.removeEventListener(event, handler, options);
+    });
+    listeners = [];
+}
+
+export function isGameEnabled() {
+    return enabled;
+}
 
 export function drawGame() {
+    if (!enabled || !ctx) return;
+
     const now = performance.now();
+    const scoreEl = document.getElementById('game-score');
 
     if (now >= nextSpawnTime) {
         items.push({
@@ -71,8 +111,6 @@ export function drawGame() {
 
         const tailLength = item.speed * 36;
         const angle = Math.atan2(item.speed, item.vx);
-        const tailX = item.x - Math.cos(angle) * tailLength;
-        const tailY = item.y - Math.sin(angle) * tailLength;
 
         const steps = 14;
         for (let s = 0; s < steps; s++) {

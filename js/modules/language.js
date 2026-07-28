@@ -4,11 +4,11 @@ import { setPhrases, resetTypewriter, type } from './typewriter.js';
 
 export let currentLang = 'en';
 
-const typewriterEl = document.getElementById('typewriter');
-const lastUpdatedEl = document.getElementById('last-updated');
-const skillsGrid = document.getElementById('skills-grid');
+let langButtons = [];
+let clickHandler = null;
 
-export function renderSkills(lang) {
+function renderSkills(lang) {
+    const skillsGrid = document.getElementById('skills-grid');
     if (!skillsGrid) return;
     skillsGrid.innerHTML = '';
     i18n[lang].skills.forEach(skill => {
@@ -32,6 +32,7 @@ export function applyLanguage(lang) {
 
     renderSkills(lang);
 
+    const lastUpdatedEl = document.getElementById('last-updated');
     if (lastUpdatedEl) {
         lastUpdatedEl.textContent = i18n[lang].lastUpdated + formatDate(new Date(), lang);
     }
@@ -45,6 +46,24 @@ export function applyLanguage(lang) {
     type();
 }
 
-document.querySelectorAll('.lang-switch button').forEach(btn => {
-    btn.addEventListener('click', () => applyLanguage(btn.dataset.lang));
-});
+export function initLanguage() {
+    destroyLanguage();
+
+    langButtons = Array.from(document.querySelectorAll('.lang-switch button'));
+    clickHandler = (e) => {
+        const btn = e.target.closest('.lang-switch button');
+        if (!btn) return;
+        applyLanguage(btn.dataset.lang);
+    };
+    langButtons.forEach(btn => btn.addEventListener('click', clickHandler));
+
+    applyLanguage(currentLang);
+}
+
+export function destroyLanguage() {
+    if (clickHandler) {
+        langButtons.forEach(btn => btn.removeEventListener('click', clickHandler));
+    }
+    langButtons = [];
+    clickHandler = null;
+}

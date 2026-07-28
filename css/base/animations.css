@@ -2,6 +2,10 @@
     to { transform: translate(-50%, -50%) rotate(360deg); }
 }
 
+@keyframes spin-ring {
+    to { transform: rotate(360deg); }
+}
+
 @keyframes blink {
     0%, 50% { opacity: 1; }
     51%, 100% { opacity: 0; }
