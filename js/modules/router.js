@@ -42,6 +42,22 @@ let currentModule = null;
 let currentPath = null;
 let isLoading = false;
 
+function loadStylesheets(links) {
+    const loaders = links.map((href) => new Promise((resolve) => {
+        const link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = href;
+        link.dataset.pageStyle = '';
+        link.onload = () => resolve(link);
+        link.onerror = () => resolve(link);
+        document.head.appendChild(link);
+    }));
+
+    // Guard against a hung stylesheet; show content after a short timeout.
+    const timeout = new Promise((resolve) => setTimeout(resolve, 2500));
+    return Promise.all([Promise.all(loaders), timeout]).then(([loaded]) => loaded);
+}
+
 async function loadRoute(path, push = true) {
     const normalized = normalizePath(path);
     if (normalized === currentPath && push) return;
@@ -78,6 +94,17 @@ async function loadRoute(path, push = true) {
         return;
     }
 
+    // Prepare next styles before swapping anything so the new view renders
+    // with its styles already in place, avoiding a flash of unstyled content.
+    const nextStyleLinks = [...doc.querySelectorAll('link[rel="stylesheet"][data-page-style]')]
+        .map((link) => {
+            const href = link.getAttribute('href');
+            return href ? new URL(href, location.origin + normalized).href : null;
+        })
+        .filter(Boolean);
+
+    await loadStylesheets(nextStyleLinks);
+
     // Clean up previous view
     if (currentModule && typeof currentModule.destroy === 'function') {
         try { currentModule.destroy(); } catch (e) { console.error(e); }
@@ -85,17 +112,7 @@ async function loadRoute(path, push = true) {
     currentModule = null;
 
     // Swap stylesheets
-    document.querySelectorAll('link[data-page-style]').forEach(link => link.remove());
-    doc.querySelectorAll('link[rel="stylesheet"][data-page-style]').forEach(link => {
-        const href = link.getAttribute('href');
-        if (!href) return;
-        const abs = new URL(href, location.origin + normalized).href;
-        const newLink = document.createElement('link');
-        newLink.rel = 'stylesheet';
-        newLink.href = abs;
-        newLink.dataset.pageStyle = '';
-        document.head.appendChild(newLink);
-    });
+    document.querySelectorAll('link[data-page-style]').forEach((link) => link.remove());
 
     // Update metadata
     const title = doc.title;
