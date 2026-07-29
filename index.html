@@ -9,7 +9,6 @@
         :root { --bg: #09090b; --text-main: #f8fafc; }
         [data-theme="light"] { --bg: #f8fafc; --text-main: #09090b; }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html { scroll-behavior: smooth; }
         body {
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -64,7 +63,7 @@
     <link rel="stylesheet" href="css/sections/publication.css" data-page-style>
     <link rel="stylesheet" href="css/base/responsive.css" data-page-style>
 </head>
-<body>
+<body data-route="/">
     <canvas id="boids-canvas"></canvas>
     <canvas id="canvas-bg"></canvas>
     <audio id="bgm" src="/files/Allard%20Sidonia%20-%20Rain%20Without%20End.mp3" loop preload="metadata"></audio>

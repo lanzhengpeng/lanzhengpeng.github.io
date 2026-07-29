@@ -5,7 +5,8 @@
 }
 
 html {
-    scroll-behavior: smooth;
+    /* scroll-behavior removed: smooth scrolling interacts badly with the
+       fixed canvas/overflow-x layout and causes hash anchors to spring back. */
 }
 
 body {
