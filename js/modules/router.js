@@ -47,7 +47,6 @@ function loadStylesheets(links) {
         const link = document.createElement('link');
         link.rel = 'stylesheet';
         link.href = href;
-        link.dataset.pageStyle = '';
         link.onload = () => resolve(link);
         link.onerror = () => resolve(link);
         document.head.appendChild(link);
@@ -99,11 +98,13 @@ async function loadRoute(path, push = true) {
     const nextStyleLinks = [...doc.querySelectorAll('link[rel="stylesheet"][data-page-style]')]
         .map((link) => {
             const href = link.getAttribute('href');
-            return href ? new URL(href, location.origin + normalized).href : null;
+            if (!href) return null;
+            const base = new URL(normalized, location.href).href;
+            return new URL(href, base).href;
         })
         .filter(Boolean);
 
-    await loadStylesheets(nextStyleLinks);
+    const loadedLinks = await loadStylesheets(nextStyleLinks);
 
     // Clean up previous view
     if (currentModule && typeof currentModule.destroy === 'function') {
@@ -111,8 +112,10 @@ async function loadRoute(path, push = true) {
     }
     currentModule = null;
 
-    // Swap stylesheets
+    // Swap stylesheets: new styles are already loaded, so remove old page styles
+    // and mark the new ones as page styles for the next navigation.
     document.querySelectorAll('link[data-page-style]').forEach((link) => link.remove());
+    loadedLinks.forEach((link) => { link.dataset.pageStyle = ''; });
 
     // Update metadata
     const title = doc.title;
