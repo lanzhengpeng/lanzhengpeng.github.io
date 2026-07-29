@@ -1,5 +1,5 @@
 {
-  "url": "https://lanzhengpeng.github.io/works/webrtc-live/",
+  "url": "https://lanzhengpeng.pages.dev/works/webrtc-live/",
   "name": "XiaomaoLive",
   "identifier": "io.github.lanzhengpeng.xiaomaolive",
   "icon": "icons/works.png",
@@ -12,6 +12,6 @@
   "darkMode": true,
   "camera": true,
   "microphone": true,
-  "safeDomain": "lanzhengpeng.github.io",
+  "safeDomain": "lanzhengpeng.pages.dev",
   "enableFind": false
 }

@@ -4,7 +4,7 @@
 
 ## 在线预览
 
-[https://lanzhengpeng.github.io](https://lanzhengpeng.github.io)
+[https://lanzhengpeng.pages.dev](https://lanzhengpeng.pages.dev)
 
 ## 功能特性
 
