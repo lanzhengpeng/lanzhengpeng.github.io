@@ -147,7 +147,13 @@ async function loadRoute(path, push = true) {
         }
     }
 
-    window.scrollTo({ top: 0, behavior: 'auto' });
+    const url = new URL(path, location.href);
+    if (url.hash) {
+        const target = document.querySelector(url.hash);
+        if (target) target.scrollIntoView();
+    } else {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+    }
     isLoading = false;
 }
 
