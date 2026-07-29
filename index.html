@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Anti-FOUC: critical paint shield. Body starts transparent and fades in once styles are loaded. -->
+    <!-- Anti-FOUC: critical paint shield. The #app container starts transparent and fades in once styles are loaded, while <body> stays visible so hash anchor scrolling works correctly. -->
     <style>
         :root {
             --bg: #09090b;
@@ -31,17 +31,20 @@
             margin: 0;
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             line-height: 1.8;
+        }
+        #app {
             opacity: 0;
             transition: opacity 0.25s ease;
         }
-        body.styles-ready {
+        #app.styles-ready {
             opacity: 1;
         }
     </style>
     <script>
         (function () {
             function reveal() {
-                if (document.body) document.body.classList.add('styles-ready');
+                const app = document.getElementById('app');
+                if (app) app.classList.add('styles-ready');
             }
             if (document.readyState === 'complete') {
                 reveal();
