@@ -44,6 +44,17 @@ function bind(target, event, handler, options) {
 
 export function initGame() {
     destroyGame();
+
+    // Disable the game on touch-first devices: it uses the full viewport for
+    // controls and would otherwise block page scrolling.
+    const isTouch = window.matchMedia('(pointer: coarse)').matches
+        || ('ontouchstart' in window)
+        || (navigator.maxTouchPoints > 0);
+    if (isTouch) {
+        enabled = false;
+        return;
+    }
+
     enabled = true;
     score = 0;
     items = [];
