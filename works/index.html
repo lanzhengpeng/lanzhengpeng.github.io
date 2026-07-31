@@ -15,64 +15,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="/css/shell.css">
-    <link rel="stylesheet" href="css/style.css" data-page-style>
 </head>
 <body data-route="/works/">
-    <canvas id="canvas-bg"></canvas>
-    <canvas id="boids-canvas"></canvas>
-    <audio id="bgm" src="/files/Allard%20Sidonia%20-%20Rain%20Without%20End.mp3" loop preload="metadata"></audio>
-
-    <div class="theme-switch" id="theme-switch" aria-label="切换主题">
-        <button aria-label="切换主题">
-            <svg class="icon-light" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"/><path stroke-linecap="round" stroke-linejoin="round" d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-            <svg class="icon-dark" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-        </button>
-    </div>
-
-    <div id="app">
-        <header class="top-bar">
-            <a href="/" class="back-link">
-                <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-                返回
-            </a>
-        </header>
-
-        <main class="container">
-            <h1>个人作品</h1>
-            <p class="subtitle">精选项目与实验作品。</p>
-
-            <div class="project-grid" id="project-grid">
-                <article class="project-card cat-bg">
-                    <div class="project-title">
-                        <img src="../images/小猫灰灰.svg" alt="小猫灰灰" class="cat-logo" width="32" height="32">
-                        <h2>小猫直播</h2>
-                    </div>
-                    <p class="project-desc">在同一 Wi-Fi 下，轻轻一点，把电脑屏幕分享给身边的朋友。没有广告，也不用注册，像小猫一样轻快。</p>
-                    <div class="project-tags">
-                        <span>屏幕分享</span>
-                        <span>轻量无广告</span>
-                        <span>可爱</span>
-                    </div>
-                    <a href="webrtc-live/">查看详情</a>
-                </article>
-
-                <article class="project-card placeholder">
-                    <h2>更多作品</h2>
-                    <p class="project-desc">新项目将陆续添加到这里。</p>
-                    <div class="project-tags">
-                        <span>待更新</span>
-                    </div>
-                </article>
-            </div>
-        </main>
-
-        <footer>
-            <p>&copy; 2026 兰政鹏。</p>
-        </footer>
-    </div>
-
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <script type="module" src="js/main.js"></script>
+    <div id="root"></div>
+    <script type="module" src="/src/entries/works.jsx"></script>
 </body>
 </html>

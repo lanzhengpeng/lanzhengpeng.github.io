@@ -1,0 +1,152 @@
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { generateRoomId, resolveViewerHost, postSignal, getSignal } from '../lib/signalApi.js';
+
+export function useBroadcaster() {
+    const [roomId, setRoomId] = useState('');
+    const [viewerHost, setViewerHost] = useState('');
+    const [viewerUrl, setViewerUrl] = useState('');
+    const [status, setStatus] = useState({ text: '点击开始直播', type: '' });
+    const [showManualIp, setShowManualIp] = useState(false);
+    const [isStreaming, setIsStreaming] = useState(false);
+    const pcRef = useRef(null);
+    const localStreamRef = useRef(null);
+    const pollIntervalRef = useRef(null);
+    const videoRef = useRef(null);
+
+    const stopBroadcast = useCallback(() => {
+        if (pollIntervalRef.current) {
+            clearInterval(pollIntervalRef.current);
+            pollIntervalRef.current = null;
+        }
+        if (localStreamRef.current) {
+            localStreamRef.current.getTracks().forEach((track) => track.stop());
+            localStreamRef.current = null;
+        }
+        if (pcRef.current) {
+            pcRef.current.close();
+            pcRef.current = null;
+        }
+        if (videoRef.current) videoRef.current.srcObject = null;
+        setIsStreaming(false);
+    }, []);
+
+    useEffect(() => {
+        return () => stopBroadcast();
+    }, [stopBroadcast]);
+
+    const pollAnswer = useCallback(async () => {
+        const pc = pcRef.current;
+        if (!pc || !roomId) return;
+        try {
+            const answer = await getSignal(roomId, 'answer');
+            if (answer && answer.sdp && pc.signalingState !== 'stable') {
+                await pc.setRemoteDescription(new RTCSessionDescription(answer));
+                setStatus({ text: '观众已连接，正在传输画面', type: 'connected' });
+            }
+            const candidates = await getSignal(roomId, 'viewer-ice');
+            if (Array.isArray(candidates)) {
+                for (const c of candidates) {
+                    if (c.candidate) {
+                        await pc.addIceCandidate(new RTCIceCandidate(c));
+                    }
+                }
+            }
+        } catch (e) {
+            console.error(e);
+        }
+    }, [roomId]);
+
+    const beginStreaming = useCallback(async () => {
+        if (!navigator.mediaDevices || !navigator.mediaDevices.getDisplayMedia) {
+            setStatus({
+                text: '当前环境不支持屏幕共享。请使用 https://、localhost 或 127.0.0.1 访问，勿直接通过局域网 IP 打开。',
+                type: 'error',
+            });
+            return;
+        }
+
+        setStatus({ text: '正在获取屏幕共享...', type: '' });
+        try {
+            localStreamRef.current = await navigator.mediaDevices.getDisplayMedia({
+                video: true,
+                audio: true,
+            });
+            if (videoRef.current) videoRef.current.srcObject = localStreamRef.current;
+        } catch (e) {
+            setStatus({ text: '无法获取屏幕共享：' + e.message, type: 'error' });
+            return;
+        }
+
+        const pc = new RTCPeerConnection({
+            iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
+        });
+        pcRef.current = pc;
+
+        localStreamRef.current.getTracks().forEach((track) => {
+            pc.addTrack(track, localStreamRef.current);
+        });
+
+        pc.onicecandidate = (event) => {
+            if (event.candidate && roomId) {
+                postSignal(roomId, 'broadcaster-ice', event.candidate);
+            }
+        };
+
+        const offer = await pc.createOffer();
+        await pc.setLocalDescription(offer);
+        await postSignal(roomId, 'offer', offer);
+
+        setStatus({ text: '等待观众扫码连接...', type: '' });
+        setIsStreaming(true);
+
+        pollIntervalRef.current = setInterval(() => {
+            if (!pcRef.current) {
+                clearInterval(pollIntervalRef.current);
+                pollIntervalRef.current = null;
+                return;
+            }
+            pollAnswer();
+        }, 1000);
+    }, [roomId, pollAnswer]);
+
+    const startBroadcast = useCallback(async () => {
+        const newRoomId = generateRoomId();
+        setRoomId(newRoomId);
+        setShowManualIp(false);
+        setStatus({ text: '正在获取局域网地址...', type: '' });
+
+        const host = await resolveViewerHost();
+        if (!host) {
+            setShowManualIp(true);
+            setStatus({ text: '无法自动获取局域网 IP，请手动输入', type: '' });
+            return;
+        }
+
+        setViewerHost(host);
+        setViewerUrl(`http://${host}/works/webrtc-live/viewer.html?room=${newRoomId}`);
+        await beginStreaming();
+    }, [beginStreaming]);
+
+    const applyManualIp = useCallback(
+        async (ip) => {
+            const host = `${ip}:${window.location.port || 3000}`;
+            setViewerHost(host);
+            setViewerUrl(`http://${host}/works/webrtc-live/viewer.html?room=${roomId}`);
+            setShowManualIp(false);
+            await beginStreaming();
+        },
+        [roomId, beginStreaming]
+    );
+
+    return {
+        roomId,
+        viewerUrl,
+        status,
+        showManualIp,
+        isStreaming,
+        videoRef,
+        startBroadcast,
+        stopBroadcast,
+        applyManualIp,
+    };
+}
