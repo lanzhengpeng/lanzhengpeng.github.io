@@ -1,18 +1,30 @@
 {
-  "name": "lanzhengpeng-github-io-pake",
-  "version": "1.0.0",
+  "name": "lanzhengpeng-github-io",
+  "version": "2.0.0",
   "private": true,
-  "description": "Pake desktop packaging for lanzhengpeng.github.io",
+  "description": "Zhengpeng Lan's personal homepage built with Vite and React",
+  "type": "module",
   "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
     "pake": "pake --config pake-xiaomao.json --json",
     "pake:mac": "pake --config pake-xiaomao.json --targets dmg --json",
     "pake:win": "pake --config pake-xiaomao.json --targets msi --json",
     "pake:linux": "pake --config pake-xiaomao.json --targets deb,appimage --json"
   },
   "devDependencies": {
-    "pake-cli": "^3.15.3"
+    "@vitejs/plugin-react": "^6.0.5",
+    "pake-cli": "^3.15.3",
+    "vite": "^8.2.0"
   },
   "engines": {
     "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "qrcode.react": "^4.2.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-helmet-async": "^3.0.0"
   }
 }
