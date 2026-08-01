@@ -53,7 +53,11 @@ export function useBroadcaster() {
             if (Array.isArray(candidates)) {
                 for (const c of candidates) {
                     if (c.candidate) {
-                        await pc.addIceCandidate(new RTCIceCandidate(c));
+                        try {
+                            await pc.addIceCandidate(new RTCIceCandidate(c));
+                        } catch (err) {
+                            console.warn('Broadcaster: failed to add ICE candidate:', err);
+                        }
                     }
                 }
             }
@@ -94,6 +98,8 @@ export function useBroadcaster() {
             return;
         }
 
+        console.log('Broadcaster: starting stream for room', currentRoomId);
+
         localStreamRef.current.getTracks().forEach((track) => {
             pc.addTrack(track, localStreamRef.current);
         });
@@ -107,6 +113,7 @@ export function useBroadcaster() {
         const offer = await pc.createOffer();
         await pc.setLocalDescription(offer);
         await postSignal(currentRoomId, 'offer', offer);
+        console.log('Broadcaster: posted offer');
 
         setStatus({ text: '等待观众扫码连接...', type: '' });
         setIsStreaming(true);
