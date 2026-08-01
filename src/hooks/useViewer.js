@@ -8,6 +8,7 @@ export function useViewer() {
     const pcRef = useRef(null);
     const pollIntervalRef = useRef(null);
     const activeWaitRef = useRef(false);
+    const connectingRef = useRef(false);
     const videoRef = useRef(null);
 
     const cleanup = useCallback(() => {
@@ -22,6 +23,7 @@ export function useViewer() {
         }
         if (videoRef.current) videoRef.current.srcObject = null;
         setIsConnected(false);
+        connectingRef.current = false;
     }, []);
 
     useEffect(() => {
@@ -36,7 +38,11 @@ export function useViewer() {
             if (Array.isArray(candidates)) {
                 for (const c of candidates) {
                     if (c.candidate) {
-                        await pc.addIceCandidate(new RTCIceCandidate(c));
+                        try {
+                            await pc.addIceCandidate(new RTCIceCandidate(c));
+                        } catch (err) {
+                            console.warn('Viewer: failed to add ICE candidate:', err);
+                        }
                     }
                 }
             }
@@ -57,7 +63,14 @@ export function useViewer() {
     }, [roomId]);
 
     const connect = useCallback(async () => {
+        if (connectingRef.current || pcRef.current) {
+            console.log('Viewer: already connecting or connected');
+            return;
+        }
+        connectingRef.current = true;
         setStatus({ text: '正在获取主播画面...', type: '' });
+
+        console.log('Viewer: connecting to room', roomId);
 
         const pc = new RTCPeerConnection({
             iceServers: [{ urls: 'stun:stun.l.google.com:19302' }],
@@ -65,12 +78,15 @@ export function useViewer() {
         pcRef.current = pc;
 
         pc.ontrack = (event) => {
+            console.log('Viewer: ontrack', event.track.kind, event.streams);
             const stream = event.streams && event.streams[0]
                 ? event.streams[0]
                 : new MediaStream([event.track]);
             if (videoRef.current) {
                 videoRef.current.srcObject = stream;
-                videoRef.current.play().catch(() => {});
+                videoRef.current.play().catch((err) => {
+                    console.warn('Viewer: video play failed:', err);
+                });
                 setStatus({ text: '已连接，正在播放', type: 'connected' });
                 setIsConnected(true);
             }
@@ -78,6 +94,7 @@ export function useViewer() {
 
         pc.onconnectionstatechange = () => {
             const state = pc.connectionState;
+            console.log('Viewer: connection state', state);
             if (state === 'failed' || state === 'disconnected' || state === 'closed') {
                 setStatus({ text: '连接已断开，请刷新重试', type: 'error' });
                 setIsConnected(false);
@@ -92,20 +109,24 @@ export function useViewer() {
 
         try {
             const offer = await waitForOffer();
+            console.log('Viewer: got offer');
             await pc.setRemoteDescription(new RTCSessionDescription(offer));
 
             const answer = await pc.createAnswer();
             await pc.setLocalDescription(answer);
             await postSignal(roomId, 'answer', answer);
+            console.log('Viewer: posted answer');
 
             if (pollIntervalRef.current) clearInterval(pollIntervalRef.current);
             pollIntervalRef.current = setInterval(() => {
                 if (pcRef.current) pollBroadcasterIce();
             }, 1000);
         } catch (e) {
+            console.error('Viewer: connection error', e);
             if (activeWaitRef.current) {
                 setStatus({ text: '连接失败：' + e.message, type: 'error' });
             }
+            connectingRef.current = false;
         }
     }, [roomId, waitForOffer, pollBroadcasterIce]);
 

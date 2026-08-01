@@ -10,6 +10,7 @@ export async function onRequest(context) {
         'Access-Control-Allow-Origin': '*',
         'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
+        'Cache-Control': 'no-store',
       },
     });
   }
@@ -19,5 +20,6 @@ export async function onRequest(context) {
   newResponse.headers.set('Access-Control-Allow-Origin', '*');
   newResponse.headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
   newResponse.headers.set('Access-Control-Allow-Headers', 'Content-Type');
+  newResponse.headers.set('Cache-Control', 'no-store');
   return newResponse;
 }
