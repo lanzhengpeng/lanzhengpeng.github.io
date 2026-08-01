@@ -65,10 +65,22 @@ export function useViewer() {
         pcRef.current = pc;
 
         pc.ontrack = (event) => {
-            if (event.streams && event.streams[0] && videoRef.current) {
-                videoRef.current.srcObject = event.streams[0];
+            const stream = event.streams && event.streams[0]
+                ? event.streams[0]
+                : new MediaStream([event.track]);
+            if (videoRef.current) {
+                videoRef.current.srcObject = stream;
+                videoRef.current.play().catch(() => {});
                 setStatus({ text: '已连接，正在播放', type: 'connected' });
                 setIsConnected(true);
+            }
+        };
+
+        pc.onconnectionstatechange = () => {
+            const state = pc.connectionState;
+            if (state === 'failed' || state === 'disconnected' || state === 'closed') {
+                setStatus({ text: '连接已断开，请刷新重试', type: 'error' });
+                setIsConnected(false);
             }
         };
 

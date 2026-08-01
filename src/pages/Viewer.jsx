@@ -18,7 +18,7 @@ export default function Viewer() {
 
                     <div className="card">
                         <div id="room-label" className="url-text">房间号：{roomId}</div>
-                        <video id="remote-video" ref={videoRef} autoPlay playsInline />
+                        <video id="remote-video" ref={videoRef} autoPlay playsInline muted />
                         <div className="btn-row btn-row-center">
                             <button id="connect-btn" className="btn" onClick={connect} disabled={isConnected}>
                                 连接直播
