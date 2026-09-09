@@ -2,13 +2,13 @@
 <html lang="zh-CN">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>DataViz</title>
 <style>
-* { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:-apple-system,sans-serif; background:#0b0d10; color:#e8edf3; padding:20px; }
+* { margin:0; padding:0; box-sizing:border-box; } html { height:100%; } body { height:100%; overflow:auto; }
+body { font-family:-apple-system,sans-serif; background:#0b0d10; color:#e8edf3; padding:3%; }
 .title { font-size:1.2rem; margin-bottom:16px; color:#7aa9ff; }
-.charts { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.charts { display:grid; grid-template-columns:1fr 1fr; gap:3%; }
 .chart-card { background:#151a23; border:1px solid #253045; border-radius:12px; padding:16px; }
 .chart-card h4 { font-size:0.75rem; color:#94a3b8; margin-bottom:10px; }
-.donut { width:100px; height:100px; border-radius:50%; margin:0 auto; position:relative; background:conic-gradient(#7aa9ff 0 45%, #22c55e 45% 75%, #f59e0b 75% 90%, #ef4444 90% 100%); }
+.donut { width:min(100px,40%); aspect-ratio:1; border-radius:50%; margin:0 auto; position:relative; background:conic-gradient(#7aa9ff 0 45%, #22c55e 45% 75%, #f59e0b 75% 90%, #ef4444 90% 100%); }
 .donut::after { content:''; position:absolute; inset:25px; border-radius:50%; background:#151a23; }
 .line-chart { display:flex; align-items:flex-end; gap:4px; height:80px; }
 .lc-bar { flex:1; background:linear-gradient(180deg,#22c55e,#15803d); border-radius:3px 3px 0 0; }

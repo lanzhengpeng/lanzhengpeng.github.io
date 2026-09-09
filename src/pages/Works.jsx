@@ -103,14 +103,9 @@ export default function Works() {
                 <p className="works-desc">{project.description}</p>
                 <div className="works-tech">{tags}</div>
                 <div className="works-actions">
-                  {project.demoUrl && (
-                    <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
-                      🔗 在线体验
-                    </a>
-                  )}
                   {project.githubUrl && (
                     <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="github">
-                      🐙 源码
+                      源码
                     </a>
                   )}
                 </div>
@@ -120,8 +115,8 @@ export default function Works() {
                   <>
                     {isMobile ? (
                       <div className="phone-frame">
-                        <div className="phone-notch"></div>
                         <div className="phone-screen">
+                          <div className="phone-punch"></div>
                           <iframe src={project.previewUrl} loading="lazy" title={project.title}></iframe>
                         </div>
                       </div>

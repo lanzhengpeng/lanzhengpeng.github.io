@@ -1,0 +1,9 @@
+{
+  "title": "AI PaaS 平台",
+  "subtitle": "自然语言自动生成接口的 Agent 系统",
+  "description": "毕业设计项目：AI 驱动的模块化微内核 PaaS 平台。左侧聊天面板通过 LangGraph Agent 接收自然语言描述，自动生成 Controller / Service / Mapper 全套接口代码并热部署为 CSM 插件；右侧 React Flow 架构画布实时展示模块拓扑与方法级调用关系，单模块崩溃不影响全局。",
+  "techStack": ["Python", "LangGraph", "React", "React Flow", "FastAPI", "SSE"],
+  "displayType": "browser",
+  "demoUrl": "https://github.com/lanzhengpeng/thesis",
+  "githubUrl": "https://github.com/lanzhengpeng/thesis"
+}

@@ -71,7 +71,7 @@
     "id": "lanmao-ai",
     "title": "蓝猫AI视频生成",
     "subtitle": "AI 图生视频移动应用",
-    "description": "基于 React Native + Expo 构建的 AI 视频生成 App，支持图生视频、文生视频、参考生视频和三视图生成。调用本地 ComfyUI 服务生成视频，实时显示任务进度，支持历史记录管理。",
+    "description": "为什么叫蓝猫AI？「蓝」来自我的姓氏——兰，名字的简写，也像一只蓝色的小猫。加上对 Apache Tomcat 开源精神的敬意，便有了蓝猫AI。后端接入 MiniMax-3 模型 + ComfyUI 工作流，自建的 ComfyUI 工作流通过 API 桥接服务（FastAPI）与 App 打通，实现图生视频、文生视频、参考生视频与三视图生成的完整链路。",
     "techStack": [
       "React Native",
       "Expo SDK 57",
@@ -80,8 +80,8 @@
       "ComfyUI"
     ],
     "displayType": "mobile",
-    "demoUrl": "https://github.com/lanzhengpeng/nova-repo",
-    "githubUrl": "https://github.com/lanzhengpeng/nova-repo",
+    "demoUrl": "https://github.com/lanzhengpeng/nova",
+    "githubUrl": "https://github.com/lanzhengpeng/nova",
     "previewUrl": "/works-data/lanmao-ai/preview.html",
     "coverImage": ""
   },
@@ -100,6 +100,25 @@
     "demoUrl": "https://music.lanzhengpeng.pages.dev",
     "githubUrl": "https://github.com/lanzhengpeng/melodyflow",
     "previewUrl": "/works-data/music-player/preview.html",
+    "coverImage": ""
+  },
+  {
+    "id": "paas-agent",
+    "title": "AI PaaS 平台",
+    "subtitle": "自然语言自动生成接口的 Agent 系统",
+    "description": "毕业设计项目：AI 驱动的模块化微内核 PaaS 平台。左侧聊天面板通过 LangGraph Agent 接收自然语言描述，自动生成 Controller / Service / Mapper 全套接口代码并热部署为 CSM 插件；右侧 React Flow 架构画布实时展示模块拓扑与方法级调用关系，单模块崩溃不影响全局。",
+    "techStack": [
+      "Python",
+      "LangGraph",
+      "React",
+      "React Flow",
+      "FastAPI",
+      "SSE"
+    ],
+    "displayType": "browser",
+    "demoUrl": "https://github.com/lanzhengpeng/thesis",
+    "githubUrl": "https://github.com/lanzhengpeng/thesis",
+    "previewUrl": "/works-data/paas-agent/preview.html",
     "coverImage": ""
   },
   {
