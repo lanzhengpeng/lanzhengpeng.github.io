@@ -1,0 +1,9 @@
+{
+  "title": "MelodyFlow",
+  "subtitle": "沉浸式音乐播放器",
+  "description": "极简风格的音乐播放器，支持歌词滚动、频谱可视化和个性化歌单推荐，界面采用毛玻璃设计。",
+  "techStack": ["SwiftUI", "AVFoundation", "Spotify API", "CoreML"],
+  "displayType": "mobile",
+  "demoUrl": "https://music.lanzhengpeng.pages.dev",
+  "githubUrl": "https://github.com/lanzhengpeng/melodyflow"
+}

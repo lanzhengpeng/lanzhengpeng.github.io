@@ -1,0 +1,9 @@
+{
+  "title": "DataViz Studio",
+  "subtitle": "实时数据可视化平台",
+  "description": "支持拖拽式图表配置的实时数据可视化平台，可接入多种数据源，自动生成仪表盘并支持团队协作。",
+  "techStack": ["Vue 3", "ECharts", "Docker", "ClickHouse"],
+  "displayType": "browser",
+  "demoUrl": "https://viz.lanzhengpeng.pages.dev",
+  "githubUrl": "https://github.com/lanzhengpeng/dataviz-studio"
+}

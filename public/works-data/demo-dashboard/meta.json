@@ -1,0 +1,9 @@
+{
+  "title": "Agent Dashboard",
+  "subtitle": "LLM 智能体可视化监控面板",
+  "description": "一个用于监控和调试 LLM Agent 的实时可视化面板，展示工具调用链路、Token 消耗和延迟分析。",
+  "techStack": ["React", "TypeScript", "D3.js", "WebSocket"],
+  "displayType": "browser",
+  "demoUrl": "https://demo.lanzhengpeng.pages.dev",
+  "githubUrl": "https://github.com/lanzhengpeng/agent-dashboard"
+}

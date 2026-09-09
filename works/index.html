@@ -1,12 +1,15 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>个人作品 - 兰政鹏</title>
-    <meta name="description" content="兰政鹏的个人作品展示">
+    <title>作品 | 兰政鹏</title>
+    <meta name="description" content="兰政鹏的项目作品展示">
     <link rel="icon" type="image/jpeg" href="/images/avatar.jpg">
-    <link rel="apple-touch-icon" href="/images/avatar.jpg">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+    </style>
     <script>
         (function () {
             const stored = localStorage.getItem('theme');
@@ -14,11 +17,8 @@
             document.documentElement.dataset.theme = theme;
         })();
     </script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
 </head>
-<body data-route="/works/">
+<body>
     <div id="root"></div>
     <script type="module" src="/src/entries/works.jsx"></script>
 </body>

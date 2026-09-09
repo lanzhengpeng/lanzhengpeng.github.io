@@ -1,0 +1,104 @@
+[
+  {
+    "id": "chat-assistant",
+    "title": "AI Chat Assistant",
+    "subtitle": "智能对话助手",
+    "description": "基于大语言模型的多轮对话助手，支持上下文理解、代码高亮和 Markdown 渲染，内置 RAG 知识库检索。",
+    "techStack": [
+      "React Native",
+      "LangChain",
+      "Pinecone",
+      "OpenAI"
+    ],
+    "displayType": "mobile",
+    "demoUrl": "https://chat.lanzhengpeng.pages.dev",
+    "githubUrl": "https://github.com/lanzhengpeng/ai-chat",
+    "previewUrl": "/works-data/chat-assistant/preview.html",
+    "coverImage": ""
+  },
+  {
+    "id": "data-viz",
+    "title": "DataViz Studio",
+    "subtitle": "实时数据可视化平台",
+    "description": "支持拖拽式图表配置的实时数据可视化平台，可接入多种数据源，自动生成仪表盘并支持团队协作。",
+    "techStack": [
+      "Vue 3",
+      "ECharts",
+      "Docker",
+      "ClickHouse"
+    ],
+    "displayType": "browser",
+    "demoUrl": "https://viz.lanzhengpeng.pages.dev",
+    "githubUrl": "https://github.com/lanzhengpeng/dataviz-studio",
+    "previewUrl": "/works-data/data-viz/preview.html",
+    "coverImage": ""
+  },
+  {
+    "id": "demo-dashboard",
+    "title": "Agent Dashboard",
+    "subtitle": "LLM 智能体可视化监控面板",
+    "description": "一个用于监控和调试 LLM Agent 的实时可视化面板，展示工具调用链路、Token 消耗和延迟分析。",
+    "techStack": [
+      "React",
+      "TypeScript",
+      "D3.js",
+      "WebSocket"
+    ],
+    "displayType": "browser",
+    "demoUrl": "https://demo.lanzhengpeng.pages.dev",
+    "githubUrl": "https://github.com/lanzhengpeng/agent-dashboard",
+    "previewUrl": "/works-data/demo-dashboard/preview.html",
+    "coverImage": ""
+  },
+  {
+    "id": "e-commerce",
+    "title": "StoreMate",
+    "subtitle": "跨境电商移动端",
+    "description": "面向东南亚市场的跨境电商 App，支持多语言、多币种结算和社交拼团功能，DAU 超过 50 万。",
+    "techStack": [
+      "Flutter",
+      "Firebase",
+      "Stripe",
+      "Redis"
+    ],
+    "displayType": "mobile",
+    "demoUrl": "https://store.lanzhengpeng.pages.dev",
+    "githubUrl": "https://github.com/lanzhengpeng/storemate",
+    "previewUrl": "/works-data/e-commerce/preview.html",
+    "coverImage": ""
+  },
+  {
+    "id": "music-player",
+    "title": "MelodyFlow",
+    "subtitle": "沉浸式音乐播放器",
+    "description": "极简风格的音乐播放器，支持歌词滚动、频谱可视化和个性化歌单推荐，界面采用毛玻璃设计。",
+    "techStack": [
+      "SwiftUI",
+      "AVFoundation",
+      "Spotify API",
+      "CoreML"
+    ],
+    "displayType": "mobile",
+    "demoUrl": "https://music.lanzhengpeng.pages.dev",
+    "githubUrl": "https://github.com/lanzhengpeng/melodyflow",
+    "previewUrl": "/works-data/music-player/preview.html",
+    "coverImage": ""
+  },
+  {
+    "id": "portfolio-mobile",
+    "title": "DevPortfolio",
+    "subtitle": "开发者作品集网站",
+    "description": "为开发者设计的作品集模板，支持 Markdown 博客、暗色模式、动效背景和 SEO 优化，Lighthouse 满分。",
+    "techStack": [
+      "Next.js 14",
+      "Tailwind CSS",
+      "Framer Motion",
+      "MDX"
+    ],
+    "displayType": "browser",
+    "demoUrl": "https://portfolio.lanzhengpeng.pages.dev",
+    "githubUrl": "https://github.com/lanzhengpeng/devportfolio",
+    "previewUrl": "/works-data/portfolio-mobile/preview.html",
+    "coverImage": ""
+  }
+]

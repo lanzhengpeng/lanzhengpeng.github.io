@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>MelodyFlow</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,sans-serif; background:linear-gradient(180deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%); color:#fff; height:100vh; display:flex; flex-direction:column; align-items:center; padding:30px 20px; }
+.album-art { width:160px; height:160px; border-radius:16px; background:linear-gradient(135deg,#e74c3c,#c0392b,#8e44ad); display:flex; align-items:center; justify-content:center; font-size:4rem; box-shadow:0 20px 50px rgba(0,0,0,0.5); margin-bottom:20px; }
+.song-title { font-size:1.2rem; font-weight:700; margin-bottom:4px; }
+.artist { font-size:0.8rem; color:#a0a0b0; margin-bottom:20px; }
+.progress-bar { width:100%; max-width:280px; height:4px; background:rgba(255,255,255,0.1); border-radius:2px; margin-bottom:6px; }
+.progress-fill { width:65%; height:100%; background:linear-gradient(90deg,#e74c3c,#8e44ad); border-radius:2px; }
+.time-row { display:flex; justify-content:space-between; width:100%; max-width:280px; font-size:0.65rem; color:#a0a0b0; margin-bottom:24px; }
+.controls { display:flex; align-items:center; gap:24px; margin-bottom:24px; }
+.ctrl-btn { background:none; border:none; color:#fff; font-size:1.4rem; cursor:pointer; opacity:0.7; }
+.play-btn { width:56px; height:56px; border-radius:50%; background:#e74c3c; border:none; font-size:1.5rem; color:#fff; cursor:pointer; box-shadow:0 8px 20px rgba(231,76,60,0.4); }
+.visualizer { display:flex; align-items:flex-end; gap:3px; height:40px; }
+.viz-bar { width:4px; border-radius:2px; background:rgba(255,255,255,0.3); }
+.lyrics { margin-top:16px; text-align:center; font-size:0.75rem; color:rgba(255,255,255,0.4); line-height:1.8; }
+.lyrics .active { color:#fff; font-size:0.85rem; }
+</style></head>
+<body>
+<div class="album-art">🎵</div>
+<div class="song-title">Rain Without End</div>
+<div class="artist">Allard Sidonia</div>
+<div class="progress-bar"><div class="progress-fill"></div></div>
+<div class="time-row"><span>2:34</span><span>3:58</span></div>
+<div class="controls"><button class="ctrl-btn">🔀</button><button class="ctrl-btn">⏮</button><button class="play-btn">⏸</button><button class="ctrl-btn">⏭</button><button class="ctrl-btn">🔁</button></div>
+<div class="visualizer"><div class="viz-bar" style="height:12px"></div><div class="viz-bar" style="height:28px"></div><div class="viz-bar" style="height:18px"></div><div class="viz-bar" style="height:36px"></div><div class="viz-bar" style="height:22px"></div><div class="viz-bar" style="height:40px"></div><div class="viz-bar" style="height:15px"></div><div class="viz-bar" style="height:30px"></div><div class="viz-bar" style="height:20px"></div><div class="viz-bar" style="height:35px"></div><div class="viz-bar" style="height:10px"></div></div>
+<div class="lyrics">♪ 云层散去<br><span class="active">雨滴落下 无尽之雨</span><br>♪ 我在等待你的声音</div>
+</body></html>

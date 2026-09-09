@@ -4,15 +4,15 @@ import MusicControl from './MusicControl.jsx';
 import BackgroundCanvas from './BackgroundCanvas.jsx';
 import BoidsCanvas from './BoidsCanvas.jsx';
 
-export default function Layout({ route, showMusicControl = true, children }) {
+export default function Layout({ route, showMusicControl = true, showBackground = true, children }) {
     useEffect(() => {
         document.body.dataset.route = route;
     }, [route]);
 
     return (
         <>
-            <BackgroundCanvas />
-            <BoidsCanvas />
+            {showBackground && <BackgroundCanvas />}
+            {showBackground && <BoidsCanvas />}
             <ThemeSwitch />
             {showMusicControl && <MusicControl />}
             {children}

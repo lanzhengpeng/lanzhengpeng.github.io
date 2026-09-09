@@ -1,47 +1,142 @@
-import Layout from '../components/Layout.jsx';
-import BackLink from '../components/BackLink.jsx';
+import { useEffect, useState, useRef } from 'react';
+import '../styles/pages/works.css';
+
+const SkeletonCard = () => (
+  <div className="skeleton-section">
+    <div className="skeleton-content">
+      <div className="skeleton-info">
+        <div className="skeleton-title"></div>
+        <div className="skeleton-subtitle"></div>
+        <div className="skeleton-desc"></div>
+        <div className="skeleton-tags">
+          <span></span><span></span><span></span>
+        </div>
+        <div className="skeleton-actions">
+          <span></span><span></span>
+        </div>
+      </div>
+      <div className="skeleton-mockup">
+        <div className="skeleton-browser"></div>
+      </div>
+    </div>
+  </div>
+);
 
 export default function Works() {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const containerRef = useRef(null);
+
+  useEffect(() => {
+    fetch('/works-data/manifest.json')
+      .then(res => {
+        if (!res.ok) throw new Error('manifest not found');
+        return res.json();
+      })
+      .then(data => {
+        setProjects(data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setProjects([]);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) {
     return (
-        <Layout route="/works/">
-            <div className="works-page">
-                <header className="top-bar">
-                    <BackLink href="/">返回</BackLink>
-                </header>
-
-                <main className="container">
-                    <h1>个人作品</h1>
-                    <p className="subtitle">精选项目与实验作品。</p>
-
-                    <div className="project-grid">
-                        <article className="project-card cat-bg">
-                            <div className="project-title">
-                                <img src="/images/小猫灰灰.svg" alt="小猫灰灰" className="cat-logo" width="32" height="32" />
-                                <h2>小猫直播</h2>
-                            </div>
-                            <p className="project-desc">在同一 Wi-Fi 下，轻轻一点，把电脑屏幕分享给身边的朋友。没有广告，也不用注册，像小猫一样轻快。</p>
-                            <div className="project-tags">
-                                <span>屏幕分享</span>
-                                <span>轻量无广告</span>
-                                <span>可爱</span>
-                            </div>
-                            <a href="/works/webrtc-live/">查看详情</a>
-                        </article>
-
-                        <article className="project-card placeholder">
-                            <h2>更多作品</h2>
-                            <p className="project-desc">新项目将陆续添加到这里。</p>
-                            <div className="project-tags">
-                                <span>待更新</span>
-                            </div>
-                        </article>
-                    </div>
-                </main>
-
-                <footer>
-                    <p>&copy; 2026 兰政鹏。</p>
-                </footer>
-            </div>
-        </Layout>
+      <div className="works-container skeleton-container">
+        <SkeletonCard />
+        <SkeletonCard />
+        <SkeletonCard />
+      </div>
     );
+  }
+
+  if (!projects.length) {
+    return (
+      <div className="works-empty-state">
+        <div className="empty-icon">📭</div>
+        <h2>还没有作品</h2>
+        <p>
+          请在 <code>public/works-data/</code> 目录下创建项目文件夹，
+          每个文件夹包含 <code>meta.json</code> 和 <code>preview.html</code>，
+          然后运行 <code>npm run generate-works</code> 生成清单。
+        </p>
+        <div className="empty-example">
+          <p>示例文件夹结构：</p>
+          <pre>
+            {`public/works-data/
+  └── my-project/
+      ├── meta.json
+      ├── preview.html
+      └── cover.png (可选)`}
+          </pre>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="works-container" ref={containerRef}>
+      {projects.map((project, index) => {
+        const isMobile = project.displayType === 'mobile';
+        const tags = (project.techStack || []).map(t => <span key={t}>{t}</span>);
+
+        return (
+          <section key={project.id} className="works-section" data-index={index}>
+            <div className="works-content">
+              <div className="works-info">
+                <h1>{project.title}</h1>
+                {project.subtitle && <div className="works-subtitle">{project.subtitle}</div>}
+                <p className="works-desc">{project.description}</p>
+                <div className="works-tech">{tags}</div>
+                <div className="works-actions">
+                  {project.demoUrl && (
+                    <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">
+                      🔗 在线体验
+                    </a>
+                  )}
+                  {project.githubUrl && (
+                    <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="github">
+                      🐙 源码
+                    </a>
+                  )}
+                </div>
+              </div>
+              <div className="works-mockup">
+                {project.previewUrl ? (
+                  <>
+                    {isMobile ? (
+                      <div className="phone-frame">
+                        <div className="phone-notch"></div>
+                        <div className="phone-screen">
+                          <iframe src={project.previewUrl} loading="lazy" title={project.title}></iframe>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="browser-frame">
+                        <div className="browser-bar">
+                          <div className="browser-dots"><span></span><span></span><span></span></div>
+                          <div className="browser-url">{project.demoUrl || 'localhost'}</div>
+                        </div>
+                        <div className="browser-body">
+                          <iframe src={project.previewUrl} loading="lazy" title={project.title}></iframe>
+                        </div>
+                      </div>
+                    )}
+                  </>
+                ) : (
+                  <div className="mockup-placeholder">
+                    <span>📄 请添加 preview.html</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            <div className="works-page-num">{index + 1} / {projects.length}</div>
+          </section>
+        );
+      })}
+    </div>
+  );
 }
