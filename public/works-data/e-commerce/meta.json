@@ -1,0 +1,9 @@
+{
+  "title": "StoreMate",
+  "subtitle": "跨境电商移动端",
+  "description": "面向东南亚市场的跨境电商 App，支持多语言、多币种结算和社交拼团功能，DAU 超过 50 万。",
+  "techStack": ["Flutter", "Firebase", "Stripe", "Redis"],
+  "displayType": "mobile",
+  "demoUrl": "https://store.lanzhengpeng.pages.dev",
+  "githubUrl": "https://github.com/lanzhengpeng/storemate"
+}

@@ -1,0 +1,101 @@
+[
+  {
+    "id": "lgagent",
+    "title": "LGagent",
+    "subtitle": "智能运维日志诊断与闭环处置系统",
+    "description": "面向复杂软件系统的可插拔工具增强型智能体运维系统。基于 LatentReAct（Decomposed Latent Verification）框架，融合大模型推理、潜空间动作验证、RAG 知识检索与远程日志监控，支持可插拔工具调用、故障卡片自动生成和任务归纳跟踪，实现日志采集、异常分析、根因定位与处置建议生成的全流程闭环。",
+    "techStack": [
+      "Python",
+      "LatentReAct",
+      "FastAPI",
+      "React",
+      "Ant Design",
+      "Qdrant"
+    ],
+    "displayType": "browser",
+    "demoUrl": "https://github.com/lanzhengpeng/LGagent",
+    "githubUrl": "",
+    "documentUrl": "/files/面向复杂软件系统的可插拔工具增强型智能体运维诊断与闭环处置系统说明书.pdf",
+    "designDocumentUrl": "/files/系统设计书.pdf",
+    "previewUrl": "/works-data/lgagent/preview.html",
+    "coverImage": "/works-data/lgagent/cover.png"
+  },
+  {
+    "id": "lanmao-ai",
+    "title": "蓝猫AI视频生成",
+    "subtitle": "AI 图生视频移动应用",
+    "description": "为什么叫蓝猫AI？「蓝」来自我的姓氏——兰，名字的简写，也像一只蓝色的小猫。加上对 Apache Tomcat 开源精神的敬意，便有了蓝猫AI。后端接入 MiniMax-3 模型 + ComfyUI 工作流，自建的 ComfyUI 工作流通过 API 桥接服务（FastAPI）与 App 打通，实现图生视频、文生视频、参考生视频与三视图生成的完整链路。",
+    "techStack": [
+      "React Native",
+      "Expo SDK 57",
+      "TypeScript",
+      "FastAPI",
+      "ComfyUI"
+    ],
+    "displayType": "mobile",
+    "demoUrl": "https://github.com/lanzhengpeng/nova",
+    "githubUrl": "https://github.com/lanzhengpeng/nova",
+    "documentUrl": "",
+    "designDocumentUrl": "",
+    "previewUrl": "/works-data/lanmao-ai/preview.html",
+    "coverImage": "/works-data/lanmao-ai/cover.png"
+  },
+  {
+    "id": "paas-agent",
+    "title": "AI PaaS 平台",
+    "subtitle": "自然语言自动生成接口的 Agent 系统",
+    "description": "AI 驱动的 API 生成与治理平台。通过自然语言快速生成 Controller / Service / Mapper（CSM）全套接口代码，并在架构画布中可视化管理模块拓扑、组件关系和方法级依赖，便于持续查看与维护。",
+    "techStack": [
+      "Python",
+      "LangGraph",
+      "React",
+      "React Flow",
+      "FastAPI",
+      "SSE"
+    ],
+    "displayType": "browser",
+    "demoUrl": "https://github.com/lanzhengpeng/thesis",
+    "githubUrl": "https://github.com/lanzhengpeng/thesis",
+    "documentUrl": "",
+    "designDocumentUrl": "",
+    "previewUrl": "/works-data/paas-agent/preview.html",
+    "coverImage": "/works-data/paas-agent/cover.png"
+  },
+  {
+    "id": "data-viz",
+    "title": "DataViz Studio",
+    "subtitle": "React 数据可视化工作台",
+    "description": "纯前端的 React 数据可视化工作台，支持接入 JSON API、CSV / JSON 文件和粘贴数据；可通过大屏设计器配置数据源、主题、布局与图表卡片，并一键进入全屏数据大屏。",
+    "techStack": [
+      "React",
+      "TypeScript",
+      "Vite",
+      "Recharts"
+    ],
+    "displayType": "browser",
+    "demoUrl": "https://viz.lanzhengpeng.pages.dev",
+    "githubUrl": "https://github.com/lanzhengpeng/dataviz-studio",
+    "documentUrl": "",
+    "designDocumentUrl": "",
+    "previewUrl": "/works-data/data-viz/preview.html",
+    "coverImage": "/works-data/data-viz/cover.png"
+  },
+  {
+    "id": "music-player",
+    "title": "MelodyFlow",
+    "subtitle": "沉浸式音乐播放器",
+    "description": "基于 UniApp 实现的沉浸式音乐播放器，支持本地音频播放、播放控制、进度调节、音量调节和实时频谱可视化，界面采用毛玻璃设计。",
+    "techStack": [
+      "UniApp",
+      "HTML5 Audio",
+      "Web Audio API"
+    ],
+    "displayType": "mobile",
+    "demoUrl": "https://music.lanzhengpeng.pages.dev",
+    "githubUrl": "https://github.com/lanzhengpeng/melodyflow",
+    "documentUrl": "",
+    "designDocumentUrl": "",
+    "previewUrl": "/works-data/music-player/preview.html",
+    "coverImage": "/works-data/music-player/cover.png"
+  }
+]

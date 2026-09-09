@@ -17,8 +17,7 @@
 - 点赞按钮（每个 IP 每天限一次）
 - 访客计数
 - +1 计数器
-- 个人作品展示页（`/works/`）
-- WebRTC 局域网屏幕直播演示（`/works/webrtc-live/`）
+- 作品展示页（`/works/`）
 
 ## 技术栈
 
@@ -38,12 +37,10 @@
 │   ├── like.js           # 点赞接口
 │   ├── visitors.js       # 访客统计接口
 │   ├── plus-one.js       # +1 接口
-│   └── webrtc-signal/    # WebRTC 信令接口
 ├── images/               # 图片资源
 ├── js/                   # 主页脚本
 ├── works/                # 个人作品页
 │   ├── index.html        # 作品列表
-│   └── webrtc-live/      # WebRTC 直播演示
 ├── index.html            # 主页面
 ├── README.md             # 本文件
 └── .gitignore            # git 忽略规则
@@ -74,7 +71,7 @@ npx wrangler pages dev . --kv=PORTFOLIO_KV --port 8080 --ip 0.0.0.0
 - 本机访问：http://localhost:8080
 - 同一局域网内其他设备访问：http://192.168.1.6:8080（请把 `192.168.1.6` 替换为你电脑的局域网 IP）
 
-> 绑定 `--ip 0.0.0.0` 是为了让同一 Wi-Fi 下的手机也能访问，测试 WebRTC 直播等需要扫码的功能时必须这样启动。
+> 绑定 `--ip 0.0.0.0` 是为了让同一 Wi-Fi 下的手机也能访问，方便在移动设备上测试页面效果。
 
 Wrangler 会自动处理：
 
@@ -93,8 +90,6 @@ Wrangler 会自动处理：
 | POST | `/like` | 点赞数 +1，返回最新计数 |
 | GET | `/plus-one` | 获取当前 +1 计数 |
 | POST | `/plus-one` | +1 计数 |
-| POST | `/webrtc-signal/:room/:type` | WebRTC 信令：存储 offer/answer/ICE |
-| GET | `/webrtc-signal/:room/:type` | WebRTC 信令：读取 offer/answer/ICE |
 
 所有接口均通过 `functions/_middleware.js` 添加 CORS 响应头，允许前端跨域调用。
 
@@ -109,7 +104,7 @@ Wrangler 会自动处理：
 
 ## 桌面客户端（Pake）
 
-使用 [Pake](https://github.com/tw93/Pake) 将「小猫直播」打包为轻量桌面应用，支持 macOS、Windows、Linux。
+使用 [Pake](https://github.com/tw93/Pake) 将个人主页打包为轻量桌面应用，支持 macOS、Windows、Linux。
 
 ### 本地构建
 

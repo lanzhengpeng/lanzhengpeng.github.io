@@ -1,0 +1,9 @@
+{
+  "title": "DataViz Studio",
+  "subtitle": "React 数据可视化工作台",
+  "description": "纯前端的 React 数据可视化工作台，支持接入 JSON API、CSV / JSON 文件和粘贴数据；可通过大屏设计器配置数据源、主题、布局与图表卡片，并一键进入全屏数据大屏。",
+  "techStack": ["React", "TypeScript", "Vite", "Recharts"],
+  "displayType": "browser",
+  "demoUrl": "https://viz.lanzhengpeng.pages.dev",
+  "githubUrl": "https://github.com/lanzhengpeng/dataviz-studio"
+}

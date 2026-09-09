@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI PaaS Studio</title>
+  <script src="./mock-api.js"></script>
+  <style>
+    * { margin:0; padding:0; box-sizing:border-box; }
+    html, body { width:100%; height:100%; overflow:hidden; }
+    body { font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif; color:#1e293b; background:#fff; font-size:14px; -webkit-font-smoothing:antialiased; }
+    :root { --background:#fff; --background-subtle:#fafafa; --foreground:#1e293b; --foreground-strong:#0f172a; --muted:#f8fafc; --muted-foreground:#64748b; --muted-foreground-subtle:#94a3b8; --accent:#f1f5f9; --border:#e2e8f0; --primary:#0f172a; --primary-hover:#000; --primary-foreground:#fff; --success:#16a34a; --success-fg:#166534; --error:#dc2626; }
+    button { font:inherit; color:inherit; border:none; background:transparent; cursor:pointer; }
+    .app { width:100%; height:100%; display:flex; overflow:hidden; }
+    .chat { width:28%; min-width:250px; max-width:340px; border-right:1px solid var(--border); display:flex; flex-direction:column; }
+    .chat-header { height:48px; padding:0 10px; display:flex; align-items:center; gap:6px; border-bottom:1px solid var(--border); }
+    .icon-button { width:28px; height:28px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; color:var(--muted-foreground); transition:.15s; }
+    .icon-button:hover { background:#f1f5f9; color:#1e293b; }
+    .project-name { min-width:0; flex:1; font-size:13px; font-weight:600; color:#0f172a; }
+    .messages { flex:1; overflow-y:auto; padding:16px 12px; display:flex; flex-direction:column; gap:10px; }
+    .message { max-width:88%; padding:10px 12px; font-size:12px; line-height:1.6; border-radius:12px; }
+    .message.user { align-self:flex-end; background:#ede9fe; border-bottom-right-radius:4px; }
+    .message.bot { align-self:flex-start; background:#fafafa; border:1px solid #e2e8f0; border-bottom-left-radius:4px; }
+    .message .steps { margin-top:8px; display:grid; gap:4px; color:#64748b; font-size:11px; }
+    .step { display:flex; align-items:center; gap:6px; }
+    .step-dot { width:6px; height:6px; border-radius:50%; background:#cbd5e1; }
+    .step.done .step-dot { background:#16a34a; }
+    .step.active .step-dot { background:#3b82f6; box-shadow:0 0 0 3px rgba(59,130,246,.15); }
+    .chat-form { border-top:1px solid #e2e8f0; padding:10px; }
+    .input-card { border:1px solid #e2e8f0; border-radius:12px; background:#fafafa; overflow:hidden; transition:.15s; }
+    .input-card:focus-within { border-color:#93c5fd; box-shadow:0 0 0 3px rgba(59,130,246,.12); }
+    textarea { width:100%; min-height:52px; max-height:96px; resize:none; border:none; outline:none; background:transparent; padding:10px 10px 4px; font:inherit; line-height:1.5; }
+    textarea::placeholder { color:#94a3b8; }
+    .input-toolbar { display:flex; align-items:center; gap:4px; padding:6px 6px 8px; }
+    .tool-button { height:24px; min-width:24px; padding:0 5px; border:1px solid #e2e8f0; border-radius:6px; display:inline-flex; align-items:center; gap:3px; color:#64748b; background:#fff; font-size:10px; transition:.15s; }
+    .tool-button:hover { background:#f1f5f9; color:#1e293b; }
+    .tool-button:disabled { opacity:.5; cursor:not-allowed; }
+    .tool-button.primary { background:#0f172a; color:#fff; border-color:#0f172a; }
+    .tool-button.primary:hover { background:#000; }
+    .main { flex:1; min-width:0; display:flex; flex-direction:column; }
+    .tabbar { height:48px; padding:0 8px; display:flex; align-items:center; gap:4px; border-bottom:1px solid #e2e8f0; flex-shrink:0; }
+    .tabbar-scroll { flex:1; min-width:0; display:flex; align-items:center; gap:2px; overflow-x:auto; scrollbar-width:none; }
+    .tabbar-scroll::-webkit-scrollbar { display:none; }
+    .tab { height:32px; padding:0 10px; border-radius:6px; display:inline-flex; align-items:center; gap:6px; color:#64748b; font-size:12px; white-space:nowrap; transition:.15s; }
+    .tab:hover { background:#f1f5f9; color:#1e293b; }
+    .tab.active { background:#f1f5f9; color:#0f172a; font-weight:600; }
+    .tab-action { width:30px; height:30px; border-radius:6px; display:inline-flex; align-items:center; justify-content:center; color:#64748b; transition:.15s; }
+    .tab-action:hover { background:#f1f5f9; color:#1e293b; }
+    .refresh-button { height:30px; padding:0 12px; border-radius:6px; background:#0f172a; color:#fff; font-size:12px; font-weight:500; display:inline-flex; align-items:center; gap:6px; flex-shrink:0; }
+    .refresh-button:hover { background:#000; }
+    .workspace { flex:1; min-height:0; display:flex; overflow:hidden; background:#f5f5f5; }
+    .canvas { flex:1; min-width:0; position:relative; overflow:hidden; }
+    .stats { position:absolute; top:12px; left:50%; transform:translateX(-50%); z-index:5; display:flex; align-items:center; gap:12px; padding:7px 12px; border-radius:999px; background:rgba(255,255,255,.9); border:1px solid #e2e8f0; box-shadow:0 5px 18px rgba(15,23,42,.08); font-size:11px; font-weight:600; white-space:nowrap; backdrop-filter:blur(10px); }
+    .legend { display:flex; align-items:center; gap:5px; }
+    .legend i { width:7px; height:7px; border-radius:50%; display:block; }
+    .legend.controller i { background:#3b82f6; } .legend.service i { background:#22c55e; } .legend.mapper i { background:#8b5cf6; }
+    .stage { position:absolute; left:50%; top:58%; transform:translate(-50%,-50%) scale(var(--fit-scale,.62)); transform-origin:center; }
+    .edges { position:absolute; inset:0; width:100%; height:100%; pointer-events:none; }
+    .edges path { fill:none; stroke:#cbd5e1; stroke-width:2; opacity:.65; }
+    .node { position:absolute; cursor:pointer; transition:.15s; }
+    .node:hover { transform:translateY(-2px); }
+    .node.selected { border-color:#3b82f6 !important; box-shadow:0 0 0 3px rgba(59,130,246,.16) !important; }
+    .gateway { width:240px; height:70px; border-radius:16px; background:rgba(15,23,42,.92); color:#fff; display:flex; align-items:center; justify-content:center; gap:10px; font-size:15px; font-weight:700; box-shadow:0 10px 28px rgba(15,23,42,.2); border:2px solid #0f172a; }
+    .module { width:280px; height:170px; border-radius:16px; border:2px solid #bfdbfe; background:rgba(255,255,255,.88); box-shadow:0 8px 24px rgba(0,0,0,.1); overflow:hidden; display:flex; flex-direction:column; }
+    .module.new { border-color:#86efac; background:rgba(240,253,244,.9); }
+    .module-header { height:52px; padding:0 16px; display:flex; align-items:center; gap:8px; justify-content:space-between; background:rgba(219,234,254,.5); border-bottom:1px solid rgba(191,219,254,.8); min-width:0; }
+    .module.new .module-header { background:rgba(220,252,231,.6); border-bottom-color:rgba(134,239,172,.8); }
+    .module-title { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:14px; font-weight:700; color:#1e293b; }
+    .module-badges { display:flex; align-items:center; gap:5px; flex-shrink:0; }
+    .badge { padding:2px 7px; border-radius:999px; font-size:10px; font-weight:700; }
+    .badge.c { background:#dbeafe; color:#1d4ed8; } .badge.s { background:#dcfce7; color:#15803d; } .badge.m { background:#f3e8ff; color:#7e22ce; } .badge.new { background:#16a34a; color:#fff; }
+    .status-dot { width:10px; height:10px; border-radius:50%; background:#22c55e; }
+    .module-body { flex:1; padding:12px; display:flex; flex-direction:column; gap:8px; }
+    .component { height:26px; padding:0 10px; border-radius:8px; display:flex; align-items:center; justify-content:space-between; font-size:11px; font-weight:700; }
+    .component span { min-width:0; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+    .component i { font-style:normal; font-size:9px; opacity:.65; }
+    .component.controller { background:#eff6ff; color:#1d4ed8; border:1px solid #bfdbfe; }
+    .component.service { background:#f0fdf4; color:#15803d; border:1px solid #bbf7d0; }
+    .component.mapper { background:#faf5ff; color:#7e22ce; border:1px solid #e9d5ff; }
+    .canvas-foot { position:absolute; left:12px; bottom:12px; z-index:4; display:flex; align-items:center; gap:8px; font-size:11px; color:#64748b; }
+    .api-status { display:flex; align-items:center; gap:6px; padding:5px 9px; background:rgba(255,255,255,.85); border:1px solid #e2e8f0; border-radius:999px; }
+    .api-status i { width:7px; height:7px; border-radius:50%; background:#f59e0b; box-shadow:0 0 0 3px rgba(245,158,11,.15); }
+    .api-status.connected i { background:#16a34a; box-shadow:0 0 0 3px rgba(22,163,74,.15); }
+    .api-status.error i { background:#dc2626; box-shadow:0 0 0 3px rgba(220,38,38,.15); }
+    .detail { width:250px; border-left:1px solid #e2e8f0; background:#fff; display:flex; flex-direction:column; }
+    .detail-header { height:48px; padding:0 12px; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid #e2e8f0; font-size:13px; font-weight:600; flex-shrink:0; }
+    .detail-body { flex:1; overflow-y:auto; padding:12px; }
+    .detail-title { font-size:15px; font-weight:700; color:#0f172a; margin-bottom:10px; }
+    .detail-row { display:flex; align-items:center; justify-content:space-between; font-size:12px; margin-bottom:8px; gap:8px; }
+    .detail-label { color:#64748b; flex-shrink:0; }
+    .detail-value { font-weight:600; min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .detail-section-title { font-size:12px; font-weight:700; margin:14px 0 8px; }
+    .api-chip { display:flex; align-items:center; gap:6px; padding:7px 8px; border:1px solid #e2e8f0; border-radius:8px; background:#fafafa; font-size:11px; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; margin-bottom:5px; overflow:hidden; }
+    .method { padding:2px 5px; border-radius:4px; font-size:9px; font-weight:800; }
+    .method.GET { background:#dbeafe; color:#1d4ed8; } .method.POST { background:#dcfce7; color:#15803d; }
+    .api-path { min-width:0; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .panel { flex:1; min-width:0; overflow-y:auto; padding:16px; display:none; }
+    .panel.active { display:block; }
+    .panel-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+    .panel-title { font-size:16px; font-weight:700; color:#0f172a; }
+    .api-list { border:1px solid #e2e8f0; border-radius:10px; overflow:hidden; background:#fff; }
+    .api-row { display:flex; align-items:center; gap:8px; padding:10px 12px; border-bottom:1px solid #e2e8f0; font-family:ui-monospace,SFMono-Regular,Consolas,monospace; font-size:11px; }
+    .api-row:last-child { border-bottom:none; }
+    .api-row span:nth-child(2) { min-width:0; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+    .api-row span:last-child { color:#64748b; white-space:nowrap; }
+    .package-card { border:1px solid #e2e8f0; border-radius:10px; background:#fff; padding:16px; max-width:520px; }
+    .package-row { display:flex; align-items:center; justify-content:space-between; font-size:12px; color:#64748b; margin-bottom:10px; }
+    .package-card strong { display:block; font-size:14px; color:#0f172a; margin-bottom:12px; }
+    .build-button { height:34px; padding:0 14px; border-radius:8px; background:#0f172a; color:#fff; font-size:12px; font-weight:600; }
+    .build-button:disabled { opacity:.55; cursor:not-allowed; }
+    @media (max-width:900px) { .chat { width:220px; min-width:220px; } .detail { display:none; } .stats { gap:8px; font-size:10px; padding:6px 9px; } .legend span { display:none; } }
+  </style>
+</head>
+<body>
+  <div class="app">
+    <aside class="chat">
+      <header class="chat-header">
+        <button class="icon-button" title="对话列表"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+        <div class="project-name">接口生成和规范</div>
+        <button class="icon-button" title="历史版本"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="8"/><path d="M12 8v4l3 2"/></svg></button>
+        <button class="icon-button" id="folderToggle" title="项目文件"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7a2 2 0 0 1 2-2h4l2 3h6a2 2 0 0 1 2 2v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z"/></svg></button>
+      </header>
+      <div class="messages" id="messages"></div>
+      <form class="chat-form" id="chatForm">
+        <div class="input-card">
+          <textarea id="promptInput" placeholder="输入任务或问题，例如：生成用户管理模块"></textarea>
+          <div class="input-toolbar">
+            <button type="button" class="tool-button" title="上传文件">＋</button>
+            <button type="button" class="tool-button" title="设置"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3M12 19v3M4.9 4.9l2.1 2.1M16.9 16.9l2.1 2.1M2 12h3M19 12h3M4.9 19.1l2.1-2.1M16.9 7.1l2.1-2.1"/></svg></button>
+            <button type="button" class="tool-button">技能 0</button>
+            <button type="button" class="tool-button">Auto</button>
+            <span style="flex:1"></span>
+            <button type="submit" class="tool-button primary" id="sendButton" title="发送"><svg viewBox="0 0 24 24" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button>
+          </div>
+        </div>
+      </form>
+    </aside>
+    <main class="main">
+      <div class="tabbar">
+        <button class="tab-action" title="新标签页"><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></button>
+        <div class="tabbar-scroll">
+          <button class="tab active" data-tab="preview"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 9h18"/></svg>预览</button>
+          <button class="tab" data-tab="package"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 8 12 3 3 8v8l9 5 9-5z"/><path d="m3 8 9 5 9-5M12 21v-8"/></svg>打包服务口</button>
+          <button class="tab" data-tab="api"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><path d="M4 12h16M12 4c3 3.5 3 12.5 0 16-3-3.5-3-12.5 0-16z"/></svg>API 客户端</button>
+        </div>
+        <button class="refresh-button" id="refreshButton"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M21 12a9 9 0 1 1-3-6.7L21 8"/><path d="M21 3v6h-6"/></svg>立即刷新</button>
+      </div>
+      <div class="workspace" id="workspace" data-tab="preview">
+        <section class="canvas panel active" data-panel="preview">
+          <div class="stats" id="stats"></div>
+          <div class="stage" id="stage"></div>
+          <div class="canvas-foot">
+            <div class="api-status" id="apiStatus"><i></i><span id="apiStatusText">API 连接中</span></div>
+            <span>React Flow 架构视图</span>
+          </div>
+        </section>
+        <section class="panel" data-panel="package">
+          <div class="panel-header"><div class="panel-title">打包服务口</div></div>
+          <div class="package-card">
+            <strong>PaaS Exposed Service</strong>
+            <div class="package-row"><span>目标平台</span><span>macOS · ARM64</span></div>
+            <div class="package-row"><span>入口</span><span>paas_core.server.service.service_server</span></div>
+            <div class="package-row"><span>产物</span><span>paas-service (单文件可执行)</span></div>
+            <button class="build-button" id="buildButton">开始打包</button>
+          </div>
+        </section>
+        <section class="panel" data-panel="api">
+          <div class="panel-header"><div class="panel-title">API 客户端</div><div class="api-status connected"><i></i><span>API</span></div></div>
+          <div class="api-list" id="apiList"></div>
+        </section>
+        <aside class="detail" id="detailPanel">
+          <div class="detail-header">
+            <span>详情面板</span>
+            <button class="icon-button" id="closeDetail" title="关闭"><svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M18 6 6 18M6 6l12 12"/></svg></button>
+          </div>
+          <div class="detail-body" id="detailBody"></div>
+        </aside>
+      </div>
+    </main>
+  </div>
+  <script>
+    const state = { data:null, selected:'order_module', activeTab:'preview', generatedModules:new Set() };
+    const els = { stage:document.getElementById('stage'), stats:document.getElementById('stats'), detail:document.getElementById('detailBody'), apiList:document.getElementById('apiList'), apiStatus:document.getElementById('apiStatus'), apiStatusText:document.getElementById('apiStatusText'), workspace:document.getElementById('workspace'), messages:document.getElementById('messages') };
+    function componentNames(moduleName) {
+      const graph = state.data.callGraph?.[moduleName] || {};
+      const parse = (items=[]) => String(items[0]||'').split('(')[0] || `${moduleName}Component`;
+      return { controller:parse(graph.controller), service:parse(graph.service), mapper:parse(graph.mapper) };
+    }
+    function fitStage(stageWidth, stageHeight) {
+      const canvas = document.querySelector('.canvas');
+      const scale = Math.min((canvas.clientWidth - 60) / stageWidth, (canvas.clientHeight - 100) / stageHeight, .78);
+      els.stage.style.setProperty('--fit-scale', Math.max(.32, scale).toFixed(3));
+    }
+    function renderStats() {
+      const counts = state.data.counts || {};
+      const loaded = state.data.modules?.loaded?.length || 0;
+      const total = loaded + (state.data.modules?.failed?.length || 0);
+      els.stats.innerHTML = `<span class="legend controller"><i></i>Controller <b>${counts.controllers||0}</b></span><span class="legend service"><i></i>Service <b>${counts.services||0}</b></span><span class="legend mapper"><i></i>Mapper <b>${counts.mappers||0}</b></span><span class="legend"><i style="background:#0f172a"></i>模块 <b>${loaded}/${total}</b></span>`;
+    }
+    function renderGraph() {
+      const modules = state.data.modules.loaded;
+      const columns=4, width=280, height=170, gapX=18, gapY=24;
+      const rows = Math.ceil(modules.length/columns);
+      const stageWidth = columns*width+(columns-1)*gapX+40;
+      const stageHeight = 130+rows*height+Math.max(0,rows-1)*gapY+30;
+      const gateway = { x:(stageWidth-240)/2, y:16, width:240, height:70 };
+      els.stage.style.width = `${stageWidth}px`; els.stage.style.height = `${stageHeight}px`;
+      els.stage.innerHTML = '<svg class="edges" id="edges"></svg>';
+      const positions = [];
+      modules.forEach((name,index) => {
+        const row=Math.floor(index/columns), col=index%columns;
+        const rowModuleCount=Math.min(columns,modules.length-row*columns);
+        const rowWidth=rowModuleCount*width+(rowModuleCount-1)*gapX;
+        positions.push({name,x:(stageWidth-rowWidth)/2+col*(width+gapX),y:130+row*(height+gapY),width});
+      });
+      const gatewayHtml = `<div class="node gateway" style="left:${gateway.x}px;top:${gateway.y}px;"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="4" y="5" width="16" height="14" rx="3"/><path d="M8 10h8M8 14h5"/></svg><span>网关 / 鉴权</span></div>`;
+      const moduleHtml = positions.map(({name,x,y}) => {
+        const names=componentNames(name), isNew=state.generatedModules.has(name);
+        return `<div class="node module ${isNew?'new':''} ${state.selected===name?'selected':''}" data-module="${name}" style="left:${x}px;top:${y}px;"><div class="module-header"><span class="module-title">${name}</span><span class="module-badges">${isNew?'<span class="badge new">NEW</span>':''}<span class="badge c">C 1</span><span class="badge s">S 1</span><span class="badge m">M 1</span><span class="status-dot"></span></span></div><div class="module-body"><div class="component controller"><span>${names.controller}</span><i>controller</i></div><div class="component service"><span>${names.service}</span><i>service</i></div><div class="component mapper"><span>${names.mapper}</span><i>mapper</i></div></div></div>`;
+      }).join('');
+      els.stage.insertAdjacentHTML('beforeend', gatewayHtml+moduleHtml);
+      const edges=document.getElementById('edges');
+      edges.setAttribute('viewBox',`0 0 ${stageWidth} ${stageHeight}`);
+      edges.innerHTML = positions.map(({x,y,width}) => {
+        const startX=gateway.x+gateway.width/2, startY=gateway.y+gateway.height, endX=x+width/2, endY=y;
+        const curveY=startY+Math.max(32,(endY-startY)*.45);
+        return `<path d="M ${startX} ${startY} C ${startX} ${curveY}, ${endX} ${curveY}, ${endX} ${endY}"></path>`;
+      }).join('');
+      els.stage.querySelectorAll('[data-module]').forEach((node) => node.addEventListener('click', () => { state.selected=node.dataset.module; renderGraph(); renderDetail(); }));
+      fitStage(stageWidth,stageHeight);
+    }
+    function renderDetail() {
+      const names=componentNames(state.selected), apis=state.data.apiMap.filter((api)=>api.module===state.selected), isNew=state.generatedModules.has(state.selected);
+      els.detail.innerHTML = `<div class="detail-title">${state.selected}</div><div class="detail-row"><span class="detail-label">状态</span><span class="detail-value" style="color:var(--success-fg)">${isNew?'● NEW':'● 运行中'}</span></div><div class="detail-row"><span class="detail-label">生成耗时</span><span class="detail-value">${isNew?'1.2s':'已部署'}</span></div><div class="detail-row"><span class="detail-label">接口数</span><span class="detail-value">${apis.length}</span></div><div class="detail-section-title">组件</div><div class="detail-row"><span class="detail-label">Controller</span><span class="detail-value">${names.controller}</span></div><div class="detail-row"><span class="detail-label">Service</span><span class="detail-value">${names.service}</span></div><div class="detail-row"><span class="detail-label">Mapper</span><span class="detail-value">${names.mapper}</span></div><div class="detail-section-title">API 接口</div>${apis.map((api)=>`<div class="api-chip"><span class="method ${api.method}">${api.method}</span><span class="api-path">${api.path}</span></div>`).join('')}`;
+    }
+    function renderApiList() {
+      els.apiList.innerHTML = state.data.apiMap.map((api)=>`<div class="api-row"><span class="method ${api.method}">${api.method}</span><span>${api.path}</span><span>${api.module}</span></div>`).join('');
+    }
+    function switchTab(tab) {
+      state.activeTab=tab; els.workspace.dataset.tab=tab;
+      document.querySelectorAll('.tab').forEach((item)=>item.classList.toggle('active',item.dataset.tab===tab));
+      document.querySelectorAll('.panel').forEach((item)=>item.classList.toggle('active',item.dataset.panel===tab));
+      document.querySelector('.detail').style.display=tab==='preview'?'flex':'none';
+      if(tab==='api') renderApiList();
+      if(tab==='preview') requestAnimationFrame(()=>renderGraph());
+    }
+    async function loadData(initial=false) {
+      els.apiStatus.className='api-status';
+      els.apiStatusText.textContent=initial?'API 连接中':'刷新 API';
+      try { state.data=await window.PaaSMockApi.get('/admin/kernel/cheat-sheet'); if(!state.data.modules.loaded.includes(state.selected)) state.selected=state.data.modules.loaded.at(-1); els.apiStatus.className='api-status connected'; els.apiStatusText.textContent='API 已连接'; renderStats(); renderGraph(); renderDetail(); renderApiList(); }
+      catch(error) { els.apiStatus.className='api-status error'; els.apiStatusText.textContent='API 连接失败'; }
+    }
+    function addMessage(text,type='user') { const item=document.createElement('div'); item.className=`message ${type}`; item.textContent=text; els.messages.appendChild(item); els.messages.scrollTop=els.messages.scrollHeight; return item; }
+    function addProgressMessage() {
+      const steps=['解析需求','生成 CSM 代码','安全检查与热部署'];
+      const item=document.createElement('div'); item.className='message bot'; item.innerHTML='已创建生成任务。<div class="steps">'+steps.map((step)=>`<div class="step"><span class="step-dot"></span>${step}</div>`).join('')+'</div>'; els.messages.appendChild(item); els.messages.scrollTop=els.messages.scrollHeight; return [...item.querySelectorAll('.step')];
+    }
+    async function sendMessage(prompt) {
+      const sendButton=document.getElementById('sendButton'); addMessage(prompt,'user'); const steps=addProgressMessage(); sendButton.disabled=true; steps[0].classList.add('active');
+      try { const result=await window.PaaSMockApi.post('/admin/agent/generate-module',{prompt}); steps.forEach((step,index)=>setTimeout(()=>{ step.classList.remove('active'); step.classList.add('done'); if(index===1) steps[2].classList.add('active'); },260*index)); setTimeout(()=>{ steps[2].classList.remove('active'); steps[2].classList.add('done'); state.generatedModules.add(result.module); addMessage(`${result.module} 已热部署，生成 ${result.files.length} 个文件，暴露 ${result.apiCount} 个接口。`,'bot'); loadData(false); },850); }
+      catch(error) { addMessage('生成失败：'+error.message,'bot'); }
+      finally { sendButton.disabled=false; }
+    }
+    document.getElementById('chatForm').addEventListener('submit',(event)=>{ event.preventDefault(); const input=document.getElementById('promptInput'), value=input.value.trim(); if(!value) return; input.value=''; sendMessage(value); });
+    document.querySelectorAll('.tab').forEach((item)=>item.addEventListener('click',()=>switchTab(item.dataset.tab)));
+    document.getElementById('refreshButton').addEventListener('click',()=>loadData(false));
+    document.getElementById('closeDetail').addEventListener('click',()=>document.querySelector('.detail').style.display='none');
+    document.getElementById('folderToggle').addEventListener('click',()=>switchTab('package'));
+    document.getElementById('buildButton').addEventListener('click',(event)=>{ event.target.disabled=true; event.target.textContent='打包中...'; setTimeout(()=>{ event.target.disabled=false; event.target.textContent='开始打包'; addMessage('paas-service 打包完成，产物可在项目目录下载。','bot'); },1200); });
+    addMessage('帮我生成一个用户管理模块，包含注册、登录和查询接口','user');
+    addMessage('好的，这里是当前系统架构。你可以直接输入新的模块需求，API 会返回生成与热部署结果。','bot');
+    loadData(true);
+    window.addEventListener('resize',()=>state.data&&renderGraph());
+  </script>
+</body>
+</html>

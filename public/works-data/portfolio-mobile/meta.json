@@ -1,0 +1,9 @@
+{
+  "title": "DevPortfolio",
+  "subtitle": "开发者作品集网站",
+  "description": "为开发者设计的作品集模板，支持 Markdown 博客、暗色模式、动效背景和 SEO 优化，Lighthouse 满分。",
+  "techStack": ["Next.js 14", "Tailwind CSS", "Framer Motion", "MDX"],
+  "displayType": "browser",
+  "demoUrl": "https://portfolio.lanzhengpeng.pages.dev",
+  "githubUrl": "https://github.com/lanzhengpeng/devportfolio"
+}

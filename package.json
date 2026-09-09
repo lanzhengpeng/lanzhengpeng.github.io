@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
+    "generate-works": "node scripts/generate-works.js",
     "pake": "pake --config pake-xiaomao.json --json",
     "pake:mac": "pake --config pake-xiaomao.json --targets dmg --json",
     "pake:win": "pake --config pake-xiaomao.json --targets msi --json",
@@ -22,7 +23,6 @@
     "node": ">=18.0.0"
   },
   "dependencies": {
-    "qrcode.react": "^4.2.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-helmet-async": "^3.0.0"

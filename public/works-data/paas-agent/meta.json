@@ -1,0 +1,9 @@
+{
+  "title": "AI PaaS 平台",
+  "subtitle": "自然语言自动生成接口的 Agent 系统",
+  "description": "AI 驱动的 API 生成与治理平台。通过自然语言快速生成 Controller / Service / Mapper（CSM）全套接口代码，并在架构画布中可视化管理模块拓扑、组件关系和方法级依赖，便于持续查看与维护。",
+  "techStack": ["Python", "LangGraph", "React", "React Flow", "FastAPI", "SSE"],
+  "displayType": "browser",
+  "demoUrl": "https://github.com/lanzhengpeng/thesis",
+  "githubUrl": "https://github.com/lanzhengpeng/thesis"
+}

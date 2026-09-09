@@ -1,0 +1,9 @@
+{
+  "title": "MelodyFlow",
+  "subtitle": "沉浸式音乐播放器",
+  "description": "基于 UniApp 实现的沉浸式音乐播放器，支持本地音频播放、播放控制、进度调节、音量调节和实时频谱可视化，界面采用毛玻璃设计。",
+  "techStack": ["UniApp", "HTML5 Audio", "Web Audio API"],
+  "displayType": "mobile",
+  "demoUrl": "https://music.lanzhengpeng.pages.dev",
+  "githubUrl": "https://github.com/lanzhengpeng/melodyflow"
+}

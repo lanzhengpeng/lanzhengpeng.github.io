@@ -11,9 +11,6 @@ export default defineConfig({
       input: {
         main: resolve(import.meta.dirname, 'index.html'),
         works: resolve(import.meta.dirname, 'works/index.html'),
-        webrtcLive: resolve(import.meta.dirname, 'works/webrtc-live/index.html'),
-        webrtcBroadcaster: resolve(import.meta.dirname, 'works/webrtc-live/broadcaster.html'),
-        webrtcViewer: resolve(import.meta.dirname, 'works/webrtc-live/viewer.html'),
       },
     },
   },
