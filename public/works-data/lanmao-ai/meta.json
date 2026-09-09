@@ -1,0 +1,9 @@
+{
+  "title": "蓝猫AI视频生成",
+  "subtitle": "AI 图生视频移动应用",
+  "description": "基于 React Native + Expo 构建的 AI 视频生成 App，支持图生视频、文生视频、参考生视频和三视图生成。调用本地 ComfyUI 服务生成视频，实时显示任务进度，支持历史记录管理。",
+  "techStack": ["React Native", "Expo SDK 57", "TypeScript", "FastAPI", "ComfyUI"],
+  "displayType": "mobile",
+  "demoUrl": "https://github.com/lanzhengpeng/nova-repo",
+  "githubUrl": "https://github.com/lanzhengpeng/nova-repo"
+}

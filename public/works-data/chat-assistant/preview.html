@@ -25,5 +25,5 @@ body { font-family:-apple-system,sans-serif; background:#0f172a; color:#e8edf3; 
   <div class="msg user">谢谢！<div class="time">10:22</div></div>
   <div class="msg bot">不客气！还有其他需要帮忙的吗？😊<div class="time">10:22</div></div>
 </div>
-<div class="input-bar"><input placeholder="输入消息..."><button class="send-btn">➤</button></div>
-</body></html>
+<div class="input-bar"><input id="msgInput" placeholder="输入消息..." onkeydown="if(event.key==='Enter')sendMsg()"><button class="send-btn" onclick="sendMsg()">➤</button></div>
+<script>function sendMsg(){const inp=document.getElementById("msgInput");if(!inp.value.trim())return;const box=document.querySelector(".messages");const u=document.createElement("div");u.className="msg user";u.textContent=inp.value;const t1=document.createElement("div");t1.className="time";t1.textContent="刚刚";u.appendChild(t1);box.appendChild(u);inp.value="";box.scrollTop=box.scrollHeight;setTimeout(()=>{const b=document.createElement("div");b.className="msg bot";b.textContent="收到！正在为你处理请求 ✨";const t2=document.createElement("div");t2.className="time";t2.textContent="刚刚";b.appendChild(t2);box.appendChild(b);box.scrollTop=box.scrollHeight;},800);}</script></body></html>

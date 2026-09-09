@@ -24,7 +24,7 @@ body { font-family:-apple-system,sans-serif; background:linear-gradient(180deg,#
 <div class="artist">Allard Sidonia</div>
 <div class="progress-bar"><div class="progress-fill"></div></div>
 <div class="time-row"><span>2:34</span><span>3:58</span></div>
-<div class="controls"><button class="ctrl-btn">🔀</button><button class="ctrl-btn">⏮</button><button class="play-btn">⏸</button><button class="ctrl-btn">⏭</button><button class="ctrl-btn">🔁</button></div>
+<div class="controls"><button class="ctrl-btn">🔀</button><button class="ctrl-btn">⏮</button><button class="play-btn" id="playBtn" onclick="togglePlay()">⏸</button><button class="ctrl-btn">⏭</button><button class="ctrl-btn">🔁</button></div>
 <div class="visualizer"><div class="viz-bar" style="height:12px"></div><div class="viz-bar" style="height:28px"></div><div class="viz-bar" style="height:18px"></div><div class="viz-bar" style="height:36px"></div><div class="viz-bar" style="height:22px"></div><div class="viz-bar" style="height:40px"></div><div class="viz-bar" style="height:15px"></div><div class="viz-bar" style="height:30px"></div><div class="viz-bar" style="height:20px"></div><div class="viz-bar" style="height:35px"></div><div class="viz-bar" style="height:10px"></div></div>
 <div class="lyrics">♪ 云层散去<br><span class="active">雨滴落下 无尽之雨</span><br>♪ 我在等待你的声音</div>
-</body></html>
+<script>let playing=true,vizTimer;function togglePlay(){playing=!playing;document.getElementById("playBtn").textContent=playing?"⏸":"▶";if(playing)startViz();else clearInterval(vizTimer);}function startViz(){vizTimer=setInterval(()=>{document.querySelectorAll(".viz-bar").forEach(b=>{b.style.transition="height 0.3s";b.style.height=(Math.random()*30+8)+"px";});},300);}startViz();</script></body></html>

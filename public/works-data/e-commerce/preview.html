@@ -42,5 +42,5 @@ body { font-family:-apple-system,sans-serif; background:#fafafa; color:#1a1a2e; 
   <div class="product-card"><div class="product-img p3">📦</div><div class="product-info"><div class="product-name">多功能收纳盒</div><div class="product-price">¥49 <small>¥99</small></div></div></div>
   <div class="product-card"><div class="product-img p4">🌱</div><div class="product-info"><div class="product-name">桌面绿植套装</div><div class="product-price">¥39 <small>¥69</small></div></div></div>
 </div>
-<div class="tab-bar"><div class="tab active"><span>🏠</span>首页</div><div class="tab"><span>🏷️</span>分类</div><div class="tab"><span>🛒</span>购物车</div><div class="tab"><span>👤</span>我的</div></div>
-</body></html>
+<div class="tab-bar"><div class="tab active"><span>🏠</span>首页</div><div class="tab"><span>🏷️</span>分类</div><div class="tab" id="cartTab"><span>🛒</span>购物车</div><div class="tab"><span>👤</span>我的</div></div>
+<script>let cartCount=0;document.querySelectorAll(".product-card").forEach(c=>{c.style.cursor="pointer";c.addEventListener("click",()=>{cartCount++;document.querySelector("#cartTab").innerHTML="<span>🛒</span>购物车("+cartCount+")";c.style.transform="scale(0.95)";setTimeout(()=>c.style.transform="",150);if(navigator.vibrate)navigator.vibrate(10);});});document.querySelectorAll(".tab").forEach(t=>{t.addEventListener("click",()=>{document.querySelectorAll(".tab").forEach(x=>x.classList.remove("active"));t.classList.add("active");});});</script></body></html>

@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>蓝猫AI</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:-apple-system,'PingFang SC',sans-serif; background:#F2F4F8; color:#1A1A2E; height:100vh; display:flex; flex-direction:column; }
+.top-bar { padding:16px 20px; display:flex; align-items:center; gap:12px; flex-shrink:0; }
+.logo { width:48px; height:48px; border-radius:14px; background:linear-gradient(135deg,#4DA6F0,#208AEF); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(32,138,239,0.3); flex-shrink:0; }
+.top-bar h3 { font-size:1.5rem; font-weight:700; color:#1A1A2E; white-space:nowrap; }
+.top-bar .spacer { flex:1; }
+.update-btn { background:#fff; border:none; border-radius:28px; padding:12px 24px; font-size:0.95rem; color:#6C63FF; font-weight:600; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.06); display:flex; align-items:center; gap:8px; white-space:nowrap; flex-shrink:0; }
+.clock-btn { width:48px; height:48px; border-radius:50%; background:#fff; border:none; cursor:pointer; box-shadow:0 2px 8px rgba(0,0,0,0.06); display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.scroll { flex:1; overflow-y:auto; padding:0 20px 20px; display:flex; flex-direction:column; gap:16px; }
+.card { background:#fff; border-radius:20px; padding:20px; box-shadow:0 2px 8px rgba(0,0,0,0.05); flex-shrink:0; }
+.card-header { display:flex; align-items:center; gap:8px; margin-bottom:16px; }
+.card-icon { width:30px; height:30px; border-radius:8px; background:#EEEBFF; display:flex; align-items:center; justify-content:center; flex-shrink:0; }
+.card-header h4 { font-size:1.1rem; font-weight:600; color:#1A1A2E; white-space:nowrap; }
+.card-header .sub { margin-left:auto; font-size:0.85rem; color:#8A8AA8; white-space:nowrap; }
+.img-grid { display:flex; gap:12px; }
+.img-box { flex:1; height:160px; border:2px dashed #D5D7DC; border-radius:16px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; cursor:pointer; transition:all 0.2s; background:#FAFAFC; }
+.img-box:hover { border-color:#6C63FF; background:#F8F7FF; }
+.img-box.filled { border-style:solid; border-color:#6C63FF; background:linear-gradient(135deg,#EEEBFF,#E0DBFF); }
+.icon-circle { width:56px; height:56px; border-radius:50%; background:#EEEBFF; display:flex; align-items:center; justify-content:center; }
+.img-box.filled .icon-circle { background:#6C63FF; }
+.img-label { font-size:1.05rem; font-weight:600; color:#1A1A2E; }
+.badge { padding:4px 14px; border-radius:14px; font-size:0.8rem; font-weight:600; }
+.badge.required { background:#6C63FF; color:#fff; }
+.badge.optional { background:#F0F0F3; color:#8A8AA8; }
+.prompt-area { width:100%; min-height:180px; background:#F2F4F8; border:none; border-radius:14px; padding:16px; font-size:1rem; color:#1A1A2E; font-family:inherit; resize:none; outline:none; }
+.prompt-area:focus { box-shadow:0 0 0 2px #6C63FF33; }
+.prompt-area::placeholder { color:#8A8AA8; }
+.chips { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.chip { background:#F0F0FF; border-radius:20px; padding:8px 18px; font-size:0.85rem; color:#6C63FF; font-weight:500; cursor:pointer; transition:all 0.15s; }
+.chip.active { background:#6C63FF; color:#fff; }
+.preset-row { display:flex; gap:10px; margin-bottom:14px; }
+.preset { flex:1; background:#FAFAFE; border:1px solid #E8EAF0; border-radius:12px; text-align:center; padding:12px 0; font-size:0.9rem; color:#4A4A6A; cursor:pointer; transition:all 0.15s; }
+.preset.active { border-color:#6C63FF; color:#6C63FF; background:#F5F4FF; font-weight:600; }
+.param-row { display:flex; justify-content:space-between; font-size:0.9rem; color:#4A4A6A; padding:8px 0; }
+.param-row .val { color:#6C63FF; font-weight:600; }
+.slider { width:100%; height:6px; background:#E0E1E6; border-radius:3px; margin:10px 0; position:relative; }
+.slider-fill { width:60%; height:100%; background:#6C63FF; border-radius:3px; }
+.slider-dot { position:absolute; left:60%; top:50%; transform:translate(-50%,-50%); width:22px; height:22px; border-radius:50%; background:#fff; border:3px solid #6C63FF; box-shadow:0 2px 6px rgba(0,0,0,0.15); cursor:pointer; }
+.gen-btn { width:100%; background:linear-gradient(135deg,#8B83FF,#6C63FF); border:none; border-radius:32px; padding:18px; font-size:1.1rem; font-weight:700; color:#fff; cursor:pointer; margin-top:8px; box-shadow:0 6px 20px rgba(108,99,255,0.3); transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
+.gen-btn:active { transform:scale(0.97); }
+.result-card { background:#0A0A1A; border-radius:16px; height:180px; display:flex; align-items:center; justify-content:center; margin-top:12px; }
+.bottom-nav { display:flex; background:#fff; border-top:1px solid #E8EAF0; padding:10px 0 16px; flex-shrink:0; }
+.nav-item { flex:1; text-align:center; font-size:0.75rem; color:#8A8AA8; cursor:pointer; transition:color 0.15s; }
+.nav-item.active { color:#6C63FF; }
+.nav-item .ic-box { width:56px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 4px; }
+.nav-item.active .ic-box { background:#EEEBFF; }
+</style></head>
+<body>
+<div class="top-bar">
+  <div class="logo"><svg viewBox="0 0 24 24" width="30" height="30"><circle cx="12" cy="11" r="8" fill="#fff"/><circle cx="9" cy="9.5" r="1.2" fill="#208AEF"/><circle cx="15" cy="9.5" r="1.2" fill="#208AEF"/><path d="M10 12.5h4l-2 2.5z" fill="#208AEF"/><path d="M6 6c1-2.5 3.5-2.5 4.5-1M18 6c-1-2.5-3.5-2.5-4.5-1" stroke="#fff" stroke-width="1.5" stroke-linecap="round" fill="none"/><path d="M9.5 4.5V2.5l2 2M14.5 4.5V2.5l-2 2" fill="#fff"/></svg></div>
+  <h3 id="screenTitle">图生视频</h3>
+  <div class="spacer"></div>
+  <button class="update-btn"><svg viewBox="0 0 512 512" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="36" stroke-linecap="round" stroke-linejoin="round"><path d="M320 336h76a56 56 0 000-112c-2.83 0-5.63.24-8.38.7a80 80 0 00-150.2-24A56 56 0 00116 336h56"/><path d="M208 368l48 48 48-48M256 416V288"/></svg> 检查更新</button>
+  <button class="clock-btn"><svg viewBox="0 0 512 512" width="26" height="26" fill="none" stroke="#1A1A2E" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><circle cx="256" cy="256" r="192"/><path d="M256 144v112l80 48"/></svg></button>
+</div>
+<div class="scroll">
+  <div class="card">
+    <div class="card-header"><div class="card-icon"><svg viewBox="0 0 512 512" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><rect x="64" y="64" width="336" height="336" rx="57"/><path d="M400 400L242.7 234.6a15.9 15.9 0 00-22.6 0L64 400"/><circle cx="160" cy="160" r="24"/></svg></div><h4>图片输入</h4><span class="sub">首帧 · 结束帧</span></div>
+    <div class="img-grid">
+      <div class="img-box" id="firstBox" onclick="toggleImage(this)"><div class="icon-circle"><svg viewBox="0 0 512 512" width="22" height="22" fill="#6C63FF"><path d="M133 440a35.37 35.37 0 01-34.66-44.12C117.53 309.7 146.87 96 149.33 80.94a35.33 35.33 0 0112-21.51C162.93 60.77 167 58 172 58c22 0 40 18 40 40 0 2.55-.23 5.14-.68 7.7L176 256l136-56 13.5 23.16L133 440z"/></svg></div><div class="img-label">首帧</div><div class="badge required">必填</div></div>
+      <div class="img-box" id="lastBox" onclick="toggleImage(this)"><div class="icon-circle"><svg viewBox="0 0 512 512" width="20" height="20" fill="#6C63FF"><rect x="128" y="128" width="256" height="256" rx="24"/></svg></div><div class="img-label">结束帧</div><div class="badge optional">选填</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-icon"><svg viewBox="0 0 512 512" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M384 224v184a40 40 0 01-40 40H104a40 40 0 01-40-40V168a40 40 0 0140-40h167.48"/><path d="M459.94 53.25a16.06 16.06 0 00-23.22-.56L424.35 65a8 8 0 000 11.31l11.34 11.34a8 8 0 0011.34 0l12.06-12c6.1-6.1 6.67-16.01.85-22.4zM399.34 97L256 240"/></svg></div><h4>提示词</h4><span class="sub">描述动作 / 风格</span></div>
+    <textarea class="prompt-area" id="promptInput" placeholder="例如：一只猫在草地上奔跑，镜头缓慢推进，电影质感..."></textarea>
+    <div class="chips">
+      <span class="chip active" onclick="selectChip(this)">电影质感</span>
+      <span class="chip" onclick="selectChip(this)">赛博朋克</span>
+      <span class="chip" onclick="selectChip(this)">动漫风</span>
+      <span class="chip" onclick="selectChip(this)">缓慢推进</span>
+      <span class="chip" onclick="selectChip(this)">超现实</span>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-icon"><svg viewBox="0 0 512 512" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M304 416V304M304 224V96M176 416V272M176 192V96"/><circle cx="304" cy="256" r="48"/><circle cx="176" cy="224" r="48"/></svg></div><h4>生成参数</h4></div>
+    <div class="preset-row">
+      <div class="preset active" onclick="selectPreset(this)">16:9</div>
+      <div class="preset" onclick="selectPreset(this)">9:16</div>
+      <div class="preset" onclick="selectPreset(this)">1:1</div>
+    </div>
+    <div class="param-row"><span>帧数</span><span class="val" id="frameVal">48 帧</span></div>
+    <div class="slider"><div class="slider-fill" id="sliderFill"></div><div class="slider-dot" id="sliderDot"></div></div>
+    <div class="param-row"><span>种子</span><span class="val">随机</span></div>
+  </div>
+  <div class="card">
+    <div class="card-header"><div class="card-icon"><svg viewBox="0 0 512 512" width="20" height="20" fill="none" stroke="#6C63FF" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M374.79 308.78L457.5 367a16 16 0 0025-13.14V152.26a16 16 0 00-25-13.14l-82.71 58.22A16 16 0 00368 210.63v98.74a16 16 0 006.79 7.41z"/><rect x="48" y="96" width="288" height="320" rx="48"/></svg></div><h4>生成结果</h4></div>
+    <div class="result-card"><span id="resultIcon"><svg viewBox="0 0 512 512" width="48" height="48" fill="none" stroke="#6C63FF" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><circle cx="256" cy="256" r="192"/><path d="M208 152v208l144-104z"/></svg></span></div>
+    <button class="gen-btn" id="genBtn" onclick="generate()"><svg viewBox="0 0 512 512" width="20" height="20" fill="#fff"><path d="M133 440a35.37 35.37 0 01-34.66-44.12C117.53 309.7 146.87 96 149.33 80.94a35.33 35.33 0 0112-21.51C162.93 60.77 167 58 172 58c22 0 40 18 40 40 0 2.55-.23 5.14-.68 7.7L176 256l136-56 13.5 23.16L133 440z"/></svg>开始生成</button>
+  </div>
+</div>
+<div class="bottom-nav">
+  <div class="nav-item active" onclick="switchTab(this,'图生视频')"><div class="ic-box"><svg viewBox="0 0 512 512" width="26" height="26" fill="none" stroke="#6C63FF" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><rect x="64" y="64" width="336" height="336" rx="57"/><path d="M400 400L242.7 234.6a15.9 15.9 0 00-22.6 0L64 400"/><circle cx="160" cy="160" r="24"/></svg></div>图生视频</div>
+  <div class="nav-item" onclick="switchTab(this,'文生视频')"><div class="ic-box"><svg viewBox="0 0 512 512" width="26" height="26" fill="none" stroke="#8A8AA8" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M32 96h448M96 224h320M160 352h192"/></svg></div>文生视频</div>
+  <div class="nav-item" onclick="switchTab(this,'参考生视频')"><div class="ic-box"><svg viewBox="0 0 512 512" width="26" height="26" fill="none" stroke="#8A8AA8" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><path d="M374.79 308.78L457.5 367a16 16 0 0025-13.14V152.26a16 16 0 00-25-13.14l-82.71 58.22A16 16 0 00368 210.63v98.74a16 16 0 006.79 7.41z"/><rect x="48" y="96" width="288" height="320" rx="48"/></svg></div>参考生视频</div>
+  <div class="nav-item" onclick="switchTab(this,'三视图生成')"><div class="ic-box"><svg viewBox="0 0 512 512" width="26" height="26" fill="none" stroke="#8A8AA8" stroke-width="32" stroke-linecap="round" stroke-linejoin="round"><rect x="48" y="48" width="176" height="176" rx="20"/><rect x="288" y="48" width="176" height="176" rx="20"/><rect x="48" y="288" width="176" height="176" rx="20"/><rect x="288" y="288" width="176" height="176" rx="20"/></svg></div>三视图</div>
+</div>
+<script>
+function toggleImage(box){box.classList.toggle("filled");const svg=box.querySelector(".icon-circle svg");if(box.classList.contains("filled")){svg.innerHTML="<path d='M20 6L9 17l-5-5' stroke='#fff' stroke-width='3' stroke-linecap='round' stroke-linejoin='round' fill='none'/>";}else{svg.innerHTML=box.id==="firstBox"?"<path d='M133 440a35.37 35.37 0 01-34.66-44.12C117.53 309.7 146.87 96 149.33 80.94a35.33 35.33 0 0112-21.51C162.93 60.77 167 58 172 58c22 0 40 18 40 40 0 2.55-.23 5.14-.68 7.7L176 256l136-56 13.5 23.16L133 440z' fill='#6C63FF'/>":"<rect x='128' y='128' width='256' height='256' rx='24' fill='#6C63FF'/>";}}
+function selectChip(el){document.querySelectorAll('.chip').forEach(x=>x.classList.remove('active'));el.classList.add('active');const inp=document.getElementById('promptInput');if(!inp.value)inp.value='一只猫在草地上奔跑，'+el.textContent+'风格，';}
+function selectPreset(el){document.querySelectorAll('.preset').forEach(x=>x.classList.remove('active'));el.classList.add('active');}
+function switchTab(el,title){document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active'));el.classList.add('active');document.getElementById('screenTitle').textContent=title;}
+let isGenerating=false;
+function generate(){
+  if(isGenerating)return;
+  isGenerating=true;
+  const btn=document.getElementById('genBtn');const icon=document.getElementById('resultIcon');
+  btn.textContent='⏳ 生成中...';icon.textContent='⏳';
+  let p=0;
+  const timer=setInterval(()=>{
+    p+=Math.random()*15;
+    if(p>=100){p=100;clearInterval(timer);isGenerating=false;btn.textContent='🎬 重新生成';icon.textContent='🎉';if(navigator.vibrate)navigator.vibrate(50);}
+    else{btn.textContent='⏳ 生成中 '+Math.round(p)+'%';}
+  },300);
+}
+const sliderDot=document.getElementById('sliderDot');const sliderFill=document.getElementById('sliderFill');
+let dragging=false;
+sliderDot.addEventListener('mousedown',()=>dragging=true);
+document.addEventListener('mouseup',()=>dragging=false);
+document.addEventListener('mousemove',(e)=>{if(!dragging)return;const rect=sliderDot.parentElement.getBoundingClientRect();let pct=Math.min(100,Math.max(0,(e.clientX-rect.left)/rect.width*100));sliderDot.style.left=pct+'%';sliderFill.style.width=pct+'%';document.getElementById('frameVal').textContent=Math.round(24+pct*0.72)+' 帧';});
+</script>
+</body></html>

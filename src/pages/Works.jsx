@@ -1,5 +1,12 @@
 import { useEffect, useState, useRef } from 'react';
+import { useLanguage } from '../contexts/LanguageContext.jsx';
 import '../styles/pages/works.css';
+
+const BackToHome = ({ label }) => (
+  <a href="/" className="works-back-btn" aria-label="Back to home">
+    {label}
+  </a>
+);
 
 const SkeletonCard = () => (
   <div className="skeleton-section">
@@ -23,6 +30,7 @@ const SkeletonCard = () => (
 );
 
 export default function Works() {
+  const { t } = useLanguage();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const containerRef = useRef(null);
@@ -55,13 +63,13 @@ export default function Works() {
 
   if (!projects.length) {
     return (
+      <>
+        <BackToHome label={t('worksBackHome')} />
       <div className="works-empty-state">
         <div className="empty-icon">📭</div>
-        <h2>还没有作品</h2>
+        <h2>{t('worksEmpty')}</h2>
         <p>
-          请在 <code>public/works-data/</code> 目录下创建项目文件夹，
-          每个文件夹包含 <code>meta.json</code> 和 <code>preview.html</code>，
-          然后运行 <code>npm run generate-works</code> 生成清单。
+          {t('worksEmptyHint')}
         </p>
         <div className="empty-example">
           <p>示例文件夹结构：</p>
@@ -74,11 +82,14 @@ export default function Works() {
           </pre>
         </div>
       </div>
+      </>
     );
   }
 
   return (
-    <div className="works-container" ref={containerRef}>
+    <>
+      <BackToHome label={t('worksBackHome')} />
+      <div className="works-container" ref={containerRef}>
       {projects.map((project, index) => {
         const isMobile = project.displayType === 'mobile';
         const tags = (project.techStack || []).map(t => <span key={t}>{t}</span>);
@@ -137,6 +148,7 @@ export default function Works() {
           </section>
         );
       })}
-    </div>
+      </div>
+    </>
   );
 }
