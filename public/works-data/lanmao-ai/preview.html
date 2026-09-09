@@ -3,7 +3,8 @@
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>蓝猫AI</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
-body { font-family:-apple-system,'PingFang SC',sans-serif; background:#F2F4F8; color:#1A1A2E; height:100%; display:flex; flex-direction:column; overflow-x:hidden; }
+html { height:100%; }
+body { font-family:-apple-system,'PingFang SC',sans-serif; background:#F2F4F8; color:#1A1A2E; height:100%; overflow:hidden; display:flex; flex-direction:column; }
 .top-bar { padding:14px 16px; display:flex; align-items:center; gap:10px; flex-shrink:0; min-width:0; }
 .logo { width:42px; height:42px; border-radius:12px; background:linear-gradient(135deg,#4DA6F0,#208AEF); display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(32,138,239,0.3); flex-shrink:0; }
 .top-bar h3 { font-size:1.25rem; font-weight:700; color:#1A1A2E; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
@@ -43,7 +44,7 @@ body { font-family:-apple-system,'PingFang SC',sans-serif; background:#F2F4F8; c
 .gen-btn { width:100%; background:linear-gradient(135deg,#8B83FF,#6C63FF); border:none; border-radius:32px; padding:16px; font-size:1rem; font-weight:700; color:#fff; cursor:pointer; margin-top:8px; box-shadow:0 6px 20px rgba(108,99,255,0.3); transition:all 0.2s; display:flex; align-items:center; justify-content:center; gap:8px; }
 .gen-btn:active { transform:scale(0.97); }
 .result-card { background:#0A0A1A; border-radius:16px; height:180px; display:flex; align-items:center; justify-content:center; margin-top:12px; }
-.bottom-nav { display:flex; background:#fff; border-top:1px solid #E8EAF0; padding:10px 0 16px; flex-shrink:0; }
+.bottom-nav { display:flex; background:#fff; border-top:1px solid #E8EAF0; padding:10px 0 max(16px, env(safe-area-inset-bottom)); flex-shrink:0; }
 .nav-item { flex:1; text-align:center; font-size:0.75rem; color:#8A8AA8; cursor:pointer; transition:color 0.15s; }
 .nav-item.active { color:#6C63FF; }
 .nav-item .ic-box { width:56px; height:48px; border-radius:14px; display:flex; align-items:center; justify-content:center; margin:0 auto 4px; }
