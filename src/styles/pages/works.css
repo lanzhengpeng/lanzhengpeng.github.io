@@ -1,5 +1,13 @@
 /* Works page — full-screen scroll with project mockups */
 
+:root {
+  --works-ink: #ffffff;
+}
+
+[data-theme="light"] {
+  --works-ink: #000000;
+}
+
 .works-back-btn {
   position: fixed;
   top: 1.5rem;
@@ -12,7 +20,7 @@
   border-radius: 9999px;
   background: var(--switcher-bg);
   border: 1px solid var(--card-border);
-  color: var(--text-main);
+  color: var(--works-ink);
   font-size: 0.85rem;
   font-weight: 600;
   text-decoration: none;
@@ -22,11 +30,41 @@
 }
 .works-back-btn:hover {
   background: var(--link-bg-hover);
+  border-color: var(--card-border-hover);
   box-shadow: 0 2px 8px var(--shadow-color);
+}
+
+.works-export-btn {
+  position: fixed;
+  top: 1.5rem;
+  right: 2rem;
+  z-index: 100;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.5rem 1rem;
+  border: 1px solid var(--card-border);
+  border-radius: 9999px;
+  background: var(--switcher-bg);
+  color: var(--works-ink);
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.works-export-btn:hover {
+  background: var(--link-bg-hover);
+  border-color: var(--card-border-hover);
+  box-shadow: 0 2px 8px var(--shadow-color);
+  transform: translateY(-1px);
 }
 
 .works-container {
   height: 100vh;
+  overflow-x: hidden;
   overflow-y: scroll;
   scroll-snap-type: y mandatory;
   scroll-behavior: smooth;
@@ -69,18 +107,16 @@
 }
 .works-info h1 {
   font-size: clamp(2rem, 4vw, 3.2rem);
-  background: linear-gradient(135deg, var(--text-main), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  color: var(--works-ink);
   margin-bottom: 0.3rem;
 }
 .works-subtitle {
   font-size: 1.2rem;
-  color: var(--text-muted);
+  color: var(--works-ink);
   margin-bottom: 0.8rem;
 }
 .works-desc {
-  color: var(--text-muted);
+  color: var(--works-ink);
   line-height: 1.7;
   margin-bottom: 1rem;
 }
@@ -95,7 +131,7 @@
   padding: 0.2rem 0.9rem;
   border-radius: 16px;
   font-size: 0.75rem;
-  color: var(--accent);
+  color: var(--works-ink);
   border: 1px solid var(--card-border);
 }
 .works-actions a {
@@ -104,19 +140,28 @@
   border-radius: 40px;
   font-weight: 500;
   text-decoration: none;
-  background: var(--accent);
-  color: #fff;
+  background: var(--link-bg);
+  border: 1px solid var(--card-border);
+  color: var(--works-ink);
   margin-right: 0.6rem;
   font-size: 0.9rem;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   transition: all 0.2s;
 }
 .works-actions a:hover {
-  transform: scale(1.03);
-  opacity: 0.9;
+  background: var(--link-bg-hover);
+  border-color: var(--card-border-hover);
+  transform: translateY(-2px);
 }
 .works-actions a.github {
-  background: transparent;
-  color: var(--text-muted);
+  background: var(--link-bg);
+  color: var(--works-ink);
+  border: 1px solid var(--card-border);
+}
+.works-actions a.design-document {
+  background: var(--link-bg);
+  color: var(--works-ink);
   border: 1px solid var(--card-border);
 }
 
@@ -169,7 +214,7 @@
   background: var(--card-bg);
   border-radius: 6px;
   padding: 4px 12px;
-  color: var(--text-muted);
+  color: var(--works-ink);
   font-size: 0.8rem;
   text-align: center;
   border: 1px solid var(--card-border);
@@ -187,6 +232,7 @@
 }
 
 .phone-frame {
+  position: relative;
   width: 400px;
   height: min(85vh, 860px);
   max-height: 860px;
@@ -277,7 +323,7 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  color: var(--text-muted);
+  color: var(--works-ink);
   border: 2px dashed var(--card-border);
   font-size: 1rem;
 }
@@ -287,8 +333,172 @@
   bottom: 2rem;
   right: 3rem;
   font-size: 0.8rem;
-  color: var(--text-muted);
+  color: var(--works-ink);
   letter-spacing: 1px;
+}
+
+.works-print-root {
+  display: none;
+}
+
+@media print {
+  @page {
+    size: A4;
+    margin: 14mm;
+  }
+
+  body.works-printing {
+    background: #ffffff !important;
+    color: #000000 !important;
+  }
+
+  body.works-printing #root > *:not(.works-print-root) {
+    display: none !important;
+  }
+
+  body.works-printing .works-print-root {
+    display: block !important;
+  }
+}
+
+.works-print-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 8mm;
+  padding-bottom: 4mm;
+  border-bottom: 0.6mm solid #000000;
+}
+
+.works-print-header h1 {
+  margin: 0;
+  font-size: 24pt;
+  line-height: 1.2;
+  color: #000000;
+}
+
+.works-print-header p {
+  margin: 2mm 0 0;
+  font-size: 3.6mm;
+  color: #333333;
+}
+
+.works-print-header-links {
+  display: grid;
+  justify-items: end;
+  gap: 1.6mm;
+  flex-shrink: 0;
+
+}
+
+.works-print-header-links a,
+.works-print-header-links span {
+  font-size: 4.2mm;
+  font-weight: 600;
+  color: #000000;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.works-print-header-links a {
+  border-bottom: 0.25mm solid #333333;
+}
+
+.works-print-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 6mm;
+  margin-top: 6mm;
+  color: #000000;
+}
+
+.works-print-card {
+  min-width: 0;
+  width: 100%;
+  padding: 7mm;
+  border-radius: 3mm;
+  break-inside: avoid;
+  page-break-inside: avoid;
+  background: #ffffff;
+}
+
+.works-print-card:not(:last-child) {
+  break-after: page;
+  page-break-after: always;
+}
+
+.works-print-card-head {
+  display: grid;
+  gap: 1mm;
+  margin-bottom: 3mm;
+}
+
+.works-print-card-head h2 {
+  margin: 0;
+  font-size: 5mm;
+  line-height: 1.3;
+  color: #000000;
+}
+
+.works-print-card-head span {
+  font-size: 3.4mm;
+  color: #000000;
+}
+
+.works-print-cover {
+  display: block;
+  width: 100%;
+  aspect-ratio: 16 / 10;
+  margin-bottom: 4mm;
+  border-radius: 2mm;
+  object-fit: cover;
+  background: #ffffff;
+}
+
+.works-print-cover.mobile {
+  width: auto;
+  height: 183mm;
+  aspect-ratio: 720 / 1560;
+  margin-left: auto;
+  margin-right: auto;
+  object-fit: cover;
+}
+
+.works-print-card p {
+  margin: 0 0 3mm;
+  font-size: 3.2mm;
+  line-height: 1.65;
+  color: #000000;
+}
+
+.works-print-tech {
+  margin: 0 0 3mm;
+  font-size: 2.8mm;
+  color: #000000;
+}
+
+.works-print-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3mm;
+}
+
+.works-print-links a {
+  font-size: 3mm;
+  color: #000000;
+  text-decoration: none;
+  border-bottom: 0.25mm solid #333333;
+}
+
+.works-print-footer {
+  display: flex;
+  justify-content: space-between;
+  gap: 6mm;
+  margin-top: 6mm;
+  padding-top: 3mm;
+  border-top: 0.25mm solid #333333;
+  font-size: 2.8mm;
+  color: #000000;
 }
 
 /* Skeleton */
@@ -421,7 +631,7 @@
   margin-bottom: 0.5rem;
 }
 .works-empty-state p {
-  color: var(--text-muted);
+  color: var(--works-ink);
   max-width: 600px;
   line-height: 1.8;
   margin-bottom: 1rem;
@@ -430,7 +640,7 @@
   background: var(--link-bg);
   padding: 0.2rem 0.6rem;
   border-radius: 4px;
-  color: var(--accent);
+  color: var(--works-ink);
   font-size: 0.9rem;
 }
 .works-empty-state .empty-example {
@@ -448,7 +658,7 @@
   padding: 0.8rem 1rem;
   border-radius: 6px;
   overflow-x: auto;
-  color: var(--text-muted);
+  color: var(--works-ink);
   font-size: 0.85rem;
   border: 1px solid var(--card-border);
 }

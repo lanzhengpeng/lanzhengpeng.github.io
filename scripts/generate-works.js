@@ -5,6 +5,7 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const dataDir = path.join(__dirname, '../public/works-data');
 const outputFile = path.join(dataDir, 'manifest.json');
+const projectOrder = ['lgagent', 'lanmao-ai', 'paas-agent', 'data-viz', 'music-player'];
 
 if (!fs.existsSync(dataDir)) {
   fs.mkdirSync(dataDir, { recursive: true });
@@ -13,7 +14,15 @@ if (!fs.existsSync(dataDir)) {
 const projects = fs.readdirSync(dataDir)
   .filter(f => {
     const fullPath = path.join(dataDir, f);
-    return fs.statSync(fullPath).isDirectory() && f !== 'manifest.json';
+    return fs.statSync(fullPath).isDirectory()
+      && f !== 'manifest.json'
+      && !fs.existsSync(path.join(fullPath, '.hidden'));
+  })
+  .sort((a, b) => {
+    const aOrder = projectOrder.indexOf(a);
+    const bOrder = projectOrder.indexOf(b);
+    return (aOrder === -1 ? projectOrder.length : aOrder)
+      - (bOrder === -1 ? projectOrder.length : bOrder);
   })
   .map(folder => {
     const folderPath = path.join(dataDir, folder);
@@ -38,6 +47,8 @@ const projects = fs.readdirSync(dataDir)
       displayType: meta.displayType || 'browser',
       demoUrl: meta.demoUrl || '',
       githubUrl: meta.githubUrl || '',
+      documentUrl: meta.documentUrl || '',
+      designDocumentUrl: meta.designDocumentUrl || '',
       previewUrl: previewUrl,
       coverImage: fs.existsSync(coverPath) ? `/works-data/${folder}/cover.png` : ''
     };

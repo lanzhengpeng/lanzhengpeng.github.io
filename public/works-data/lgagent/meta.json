@@ -1,0 +1,10 @@
+{
+  "title": "LGagent",
+  "subtitle": "智能运维日志诊断与闭环处置系统",
+  "description": "面向复杂软件系统的可插拔工具增强型智能体运维系统。基于 LatentReAct（Decomposed Latent Verification）框架，融合大模型推理、潜空间动作验证、RAG 知识检索与远程日志监控，支持可插拔工具调用、故障卡片自动生成和任务归纳跟踪，实现日志采集、异常分析、根因定位与处置建议生成的全流程闭环。",
+  "techStack": ["Python", "LatentReAct", "FastAPI", "React", "Ant Design", "Qdrant"],
+  "displayType": "browser",
+  "demoUrl": "https://github.com/lanzhengpeng/LGagent",
+  "documentUrl": "/files/面向复杂软件系统的可插拔工具增强型智能体运维诊断与闭环处置系统说明书.pdf",
+  "designDocumentUrl": "/files/系统设计书.pdf"
+}

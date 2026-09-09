@@ -150,7 +150,7 @@
           <div class="stats" id="stats"></div>
           <div class="stage" id="stage"></div>
           <div class="canvas-foot">
-            <div class="api-status" id="apiStatus"><i></i><span id="apiStatusText">Mock API 连接中</span></div>
+            <div class="api-status" id="apiStatus"><i></i><span id="apiStatusText">API 连接中</span></div>
             <span>React Flow 架构视图</span>
           </div>
         </section>
@@ -165,7 +165,7 @@
           </div>
         </section>
         <section class="panel" data-panel="api">
-          <div class="panel-header"><div class="panel-title">API 客户端</div><div class="api-status connected"><i></i><span>Mock API</span></div></div>
+          <div class="panel-header"><div class="panel-title">API 客户端</div><div class="api-status connected"><i></i><span>API</span></div></div>
           <div class="api-list" id="apiList"></div>
         </section>
         <aside class="detail" id="detailPanel">
@@ -246,9 +246,9 @@
     }
     async function loadData(initial=false) {
       els.apiStatus.className='api-status';
-      els.apiStatusText.textContent=initial?'Mock API 连接中':'刷新 Mock API';
-      try { state.data=await window.PaaSMockApi.get('/admin/kernel/cheat-sheet'); if(!state.data.modules.loaded.includes(state.selected)) state.selected=state.data.modules.loaded.at(-1); els.apiStatus.className='api-status connected'; els.apiStatusText.textContent='Mock API 已连接'; renderStats(); renderGraph(); renderDetail(); renderApiList(); }
-      catch(error) { els.apiStatus.className='api-status error'; els.apiStatusText.textContent='Mock API 连接失败'; }
+      els.apiStatusText.textContent=initial?'API 连接中':'刷新 API';
+      try { state.data=await window.PaaSMockApi.get('/admin/kernel/cheat-sheet'); if(!state.data.modules.loaded.includes(state.selected)) state.selected=state.data.modules.loaded.at(-1); els.apiStatus.className='api-status connected'; els.apiStatusText.textContent='API 已连接'; renderStats(); renderGraph(); renderDetail(); renderApiList(); }
+      catch(error) { els.apiStatus.className='api-status error'; els.apiStatusText.textContent='API 连接失败'; }
     }
     function addMessage(text,type='user') { const item=document.createElement('div'); item.className=`message ${type}`; item.textContent=text; els.messages.appendChild(item); els.messages.scrollTop=els.messages.scrollHeight; return item; }
     function addProgressMessage() {
@@ -268,7 +268,7 @@
     document.getElementById('folderToggle').addEventListener('click',()=>switchTab('package'));
     document.getElementById('buildButton').addEventListener('click',(event)=>{ event.target.disabled=true; event.target.textContent='打包中...'; setTimeout(()=>{ event.target.disabled=false; event.target.textContent='开始打包'; addMessage('paas-service 打包完成，产物可在项目目录下载。','bot'); },1200); });
     addMessage('帮我生成一个用户管理模块，包含注册、登录和查询接口','user');
-    addMessage('好的，这里是当前系统架构。你可以直接输入新的模块需求，Mock API 会返回生成与热部署结果。','bot');
+    addMessage('好的，这里是当前系统架构。你可以直接输入新的模块需求，API 会返回生成与热部署结果。','bot');
     loadData(true);
     window.addEventListener('resize',()=>state.data&&renderGraph());
   </script>

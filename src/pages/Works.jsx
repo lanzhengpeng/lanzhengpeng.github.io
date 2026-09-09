@@ -30,7 +30,7 @@ const SkeletonCard = () => (
 );
 
 export default function Works() {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [projects, setProjects] = useState([]);
   const [loading, setLoading] = useState(true);
   const containerRef = useRef(null);
@@ -86,9 +86,36 @@ export default function Works() {
     );
   }
 
+  function handleExportPdf() {
+    const previousTitle = document.title;
+    document.title = `${t('name')} - ${t('navWorks')}`;
+    document.body.classList.add('works-printing');
+
+    const restorePage = () => {
+      document.body.classList.remove('works-printing');
+      document.title = previousTitle;
+      window.removeEventListener('afterprint', restorePage);
+    };
+
+    window.addEventListener('afterprint', restorePage);
+    window.print();
+    restorePage();
+  }
+
+  const exportDate = new Date().toLocaleDateString(
+    language === 'zh' ? 'zh-CN' : 'en-US',
+    { year: 'numeric', month: '2-digit', day: '2-digit' },
+  );
+
   return (
     <>
       <BackToHome label={t('worksBackHome')} />
+      <button className="works-export-btn" type="button" onClick={handleExportPdf}>
+        <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24" aria-hidden="true">
+          <path strokeLinecap="round" strokeLinejoin="round" d="M12 3v12m0 0l-4-4m4 4l4-4M4 17v2a2 2 0 002 2h12a2 2 0 002-2v-2" />
+        </svg>
+        {t('worksExportPdf')}
+      </button>
       <div className="works-container" ref={containerRef}>
       {projects.map((project, index) => {
         const isMobile = project.displayType === 'mobile';
@@ -106,6 +133,16 @@ export default function Works() {
                   {project.githubUrl && (
                     <a href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="github">
                       源码
+                    </a>
+                  )}
+                  {project.documentUrl && (
+                    <a href={encodeURI(project.documentUrl)} download className="document">
+                      说明书
+                    </a>
+                 )}
+                  {project.designDocumentUrl && (
+                    <a href={encodeURI(project.designDocumentUrl)} download className="design-document">
+                      系统设计书
                     </a>
                   )}
                 </div>
@@ -143,6 +180,57 @@ export default function Works() {
           </section>
         );
       })}
+      </div>
+      <div className="works-print-root">
+        <header className="works-print-header">
+          <div>
+            <h1>{t('name')} {t('navWorks')}</h1>
+            <p>{t('heroIntro')}</p>
+          </div>
+          <div className="works-print-header-links">
+            <a href="https://lanzhengpeng.pages.dev/" target="_blank" rel="noopener noreferrer">
+              {t('worksExportHome')}
+            </a>
+            <a href="https://lanzhengpeng.pages.dev/works" target="_blank" rel="noopener noreferrer">
+              {t('worksExportPortfolio')}
+            </a>
+            <span>{t('worksExportGenerated')} · {exportDate}</span>
+          </div>
+        </header>
+
+        <div className="works-print-grid">
+          {projects.map((project, index) => (
+            <article key={project.id} className="works-print-card">
+              <div className="works-print-card-head">
+                <h2>{index + 1}. {project.title}</h2>
+                {project.subtitle && <span>{project.subtitle}</span>}
+              </div>
+              {project.coverImage && (
+                <img
+                  className={`works-print-cover ${project.displayType === 'mobile' ? 'mobile' : ''}`}
+                  src={project.coverImage}
+                  alt={`${project.title} 界面截图`}
+                />
+              )}
+              <p>{project.description}</p>
+              <p className="works-print-tech">
+                {t('worksExportTechStack')}：{(project.techStack || []).join(' · ')}
+              </p>
+              {(project.githubUrl || project.documentUrl || project.designDocumentUrl) && (
+                <div className="works-print-links">
+                  {project.githubUrl && <a href={project.githubUrl} target="_blank" rel="noopener noreferrer">{t('worksExportSource')}</a>}
+                  {project.documentUrl && <a href={encodeURI(project.documentUrl)} target="_blank" rel="noopener noreferrer">{t('worksExportDocument')}</a>}
+                  {project.designDocumentUrl && <a href={encodeURI(project.designDocumentUrl)} target="_blank" rel="noopener noreferrer">{t('worksExportDesignDoc')}</a>}
+                </div>
+              )}
+            </article>
+          ))}
+        </div>
+
+        <footer className="works-print-footer">
+          <span>{t('worksExportNote')}</span>
+          <span>lanzhengpeng.pages.dev</span>
+        </footer>
       </div>
     </>
   );
